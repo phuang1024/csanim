@@ -20,11 +20,16 @@
 CXX = /usr/bin/g++
 PY = /usr/bin/python3
 
-CXX_FLAGS = -Wall -O3
+CXX_FLAGS = -Wall -O3 -c -fPIC
 WHEEL_FLAGS = bdist_wheel sdist
 
+CXX_FILES = draw.cpp
+
 cpp:
-	echo "NotImplementedError()"
+	cd ./src; \
+	$(CXX) $(CXX_FLAGS) $(CXX_FILES); \
+	$(CXX) -shared -o libdraw.so draw.o; \
+	rm *.o;
 
 wheel:
 	cd ./build; \
