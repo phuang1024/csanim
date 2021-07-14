@@ -17,18 +17,12 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-PY = /usr/bin/python3
-WHEEL_FLAGS = bdist_wheel sdist
+CXX = /usr/bin/g++
+CXX_FLAGS = -Wall -O3 -c -fPIC
+CXX_FILES = draw.cpp
 
 
-cpp:
-	cd ./src; \
-	make;
-
-wheel:
-	cd ./build; \
-	$(PY) ./setup.py $(WHEEL_FLAGS);
-
-upload:
-	cd ./build; \
-	twine upload ./dist/*;
+all:
+	$(CXX) $(CXX_FLAGS) $(CXX_FILES)
+	$(CXX) -shared -o libdraw.so draw.o
+	rm *.o
