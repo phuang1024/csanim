@@ -17,15 +17,19 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
+CXX = /usr/bin/g++
+PY = /usr/bin/python3
+
+CXX_FLAGS = -Wall -O3
 WHEEL_FLAGS = bdist_wheel sdist
 
 cpp:
 	echo "NotImplementedError()"
 
 wheel:
-	cd ./build \
-	python setup.py $(WHEEL_FLAGS)
+	cd ./build; \
+	$(PY) ./setup.py $(WHEEL_FLAGS);
 
 upload:
-	cd ./build \
-	twine upload ./dist/*
+	cd ./build; \
+	twine upload ./dist/*;
