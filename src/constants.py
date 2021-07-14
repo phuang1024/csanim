@@ -17,6 +17,12 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-from .constants import *
-from .scene import *
-from .video import Video
+__all__ = [
+    "TR_CUT",
+    "TR_FADE",
+    "TR_FADEIO",
+]
+
+TR_CUT: int = 0
+TR_FADE: int = 1
+TR_FADEIO: int = 2
