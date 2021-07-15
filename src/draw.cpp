@@ -17,12 +17,33 @@
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 
+#include <iostream>
+
 typedef  unsigned char  UCH;
 typedef  unsigned int   UINT;
 
 
-extern "C" void circle(UCH*** img, const UINT width, const UINT height) {
-    img[0][0][0] = 255;
-    img[0][0][1] = 255;
-    img[0][0][2] = 255;
+void set(UCH* img, const UINT width, const UINT x, const UINT y, const UCH channel, const UCH value) {
+    img[3*(y*width + x) + channel] = value;
+}
+
+void setc(UCH* img, const UINT width, const UINT x, const UINT y, const UCH r, const UCH g, const UCH b) {
+    set(img, width, x, y, 0, r);
+    set(img, width, x, y, 1, g);
+    set(img, width, x, y, 2, b);
+}
+
+void get(UCH* img, const UINT width, const UINT x, const UINT y, const UCH channel, UCH* value) {
+    value[0] = img[3*(y*width + x) + channel];
+}
+
+void getc(UCH* img, const UINT width, const UINT x, const UINT y, UCH* color) {
+    get(img, width, x, y, 0, color+0);
+    get(img, width, x, y, 1, color+1);
+    get(img, width, x, y, 2, color+2);
+}
+
+
+extern "C" void circle(UCH* img, const UINT width, const UINT height) {
+    setc(img, width, 5, 5, 255, 255, 255);
 }

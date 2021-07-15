@@ -31,7 +31,7 @@ class draw:
     lib.circle.argtypes = [
         ctl.ndpointer(dtype=np.uint8, ndim=3, flags=AR_FLAGS),
         ctypes.c_uint32,
-        ctypes.c_uint32
+        ctypes.c_uint32,
     ]
 
     @staticmethod
