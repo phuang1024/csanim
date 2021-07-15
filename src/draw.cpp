@@ -18,6 +18,10 @@
 //
 
 #include <iostream>
+#include <cmath>
+
+using std::min;
+using std::max;
 
 typedef  unsigned char  UCH;
 typedef  unsigned int   UINT;
@@ -44,6 +48,34 @@ void getc(UCH* img, const UINT width, const UINT x, const UINT y, UCH* color) {
 }
 
 
-extern "C" void circle(UCH* img, const UINT width, const UINT height) {
-    setc(img, width, 5, 5, 255, 255, 255);
+void mix(UCH* dest, const UCH* c1, const UCH* c2, const double fac) {
+    for (int i = 0; i < 3; i++)
+        dest[i] = c1[i]*(1-fac) + c2[i]*fac;
+}
+
+double pythag(const double dx, const double dy) {
+    return std::pow((dx*dx) + (dy*dy), 0.5);
+}
+
+int ibounds(const int v, const int vmin = 0, const int vmax = 1) {
+    return min(max(v, vmin), vmax);
+}
+
+double dbounds(const double v, const double vmin = 0, const double vmax = 1) {
+    return min(max(v, vmin), vmax);
+}
+
+
+extern "C" void circle(UCH* img, const UINT width, const UINT height, const double cx, const double cy,
+        const double rad, const double r, const double g, const double b, const double a) {
+    const int xmin = max((int)(cx-r-1), 0);
+    const int xmax = min((int)(cx+r+1), (int)width-1);
+    const int ymin = max((int)(cy-r-1), 0);
+    const int ymax = min((int)(cy+r+1), (int)height-1);
+
+    for (int x = xmin; x <= xmax; x++) {
+        for (int y = ymin; y <= ymax; y++) {
+            const double dist = pythag(x-rad, y-rad);
+        }
+    }
 }
