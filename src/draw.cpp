@@ -67,15 +67,27 @@ double dbounds(const double v, const double vmin = 0, const double vmax = 1) {
 
 
 extern "C" void circle(UCH* img, const UINT width, const UINT height, const double cx, const double cy,
-        const double rad, const double r, const double g, const double b, const double a) {
-    const int xmin = max((int)(cx-r-1), 0);
-    const int xmax = min((int)(cx+r+1), (int)width-1);
-    const int ymin = max((int)(cy-r-1), 0);
-    const int ymax = min((int)(cy+r+1), (int)height-1);
+        const double rad, const double border, const double r, const double g, const double b, const double a) {
+    const int xmin = max((int)(cx-rad-1), 0);
+    const int xmax = min((int)(cx+rad+1), (int)width-1);
+    const int ymin = max((int)(cy-rad-1), 0);
+    const int ymax = min((int)(cy+rad+1), (int)height-1);
+
+    const double afac = a / 255;
+    const double out_thres = rad;
+    const double in_thres = (border == 0 ? 0 : (rad-border));
+    const UCH c1[3] = {r, g, b};
 
     for (int x = xmin; x <= xmax; x++) {
         for (int y = ymin; y <= ymax; y++) {
-            const double dist = pythag(x-rad, y-rad);
+            const double dist = pythag(x-cx, y-cy);
+            const double out_fac = dbounds(out_thres-dist+1);
+            const double in_fac = dbounds(dist-in_thres+1);
+
+            UCH c2[3], color[3];
+            getc(img, width, x, y, c2);
+            mix(color, c2, c1, out_fac*in_fac*afac);
+            setc(img, width, x, y, color[0], color[1], color[2]);
         }
     }
 }
