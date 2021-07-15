@@ -76,7 +76,7 @@ extern "C" void circle(UCH* img, const UINT width, const UINT height, const doub
     const double afac = a / 255;
     const double out_thres = rad;
     const double in_thres = (border == 0 ? 0 : (rad-border));
-    const UCH c1[3] = {r, g, b};
+    const UCH c1[3] = {(UCH)r, (UCH)g, (UCH)b};
 
     for (int x = xmin; x <= xmax; x++) {
         for (int y = ymin; y <= ymax; y++) {

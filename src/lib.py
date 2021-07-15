@@ -20,6 +20,7 @@
 import os
 import ctypes
 import numpy as np
+from typing import Tuple
 from numpy import ctypeslib as ctl
 
 PARENT = os.path.dirname(os.path.realpath(__file__))
@@ -32,9 +33,19 @@ class draw:
         ctl.ndpointer(dtype=np.uint8, ndim=3, flags=AR_FLAGS),
         ctypes.c_uint32,
         ctypes.c_uint32,
+        ctypes.c_double,
+        ctypes.c_double,
+        ctypes.c_double,
+        ctypes.c_double,
+        ctypes.c_double,
+        ctypes.c_double,
+        ctypes.c_double,
+        ctypes.c_double,
     ]
 
     @staticmethod
-    def circle(img: np.ndarray):
+    def circle(img: np.ndarray, color: Tuple[float, ...], center: Tuple[float, float],
+            radius: float, border: float = 0):
         assert img.dtype == np.uint8
-        draw.lib.circle(img, img.shape[1], img.shape[0])
+        color = (*color, 255) if len(color) == 3 else color
+        draw.lib.circle(img, img.shape[1], img.shape[0], *center, radius, border, *color)
