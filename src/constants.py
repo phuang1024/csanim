@@ -18,11 +18,19 @@
 #
 
 __all__ = [
+    "I_CONST",
+    "I_LIN",
+    "I_PARABOLA",
+    "I_BOUNCE",
     "T_CUT",
     "T_FADE",
     "T_FADEIO",
 ]
 
-T_CUT: int = 0
-T_FADE: int = 1
-T_FADEIO: int = 2
+I_CONST: int = 0
+I_LIN: int = 1
+I_PARABOLA: int = 2
+I_BOUNCE: int = 3
+T_CUT: int = 4
+T_FADE: int = 5
+T_FADEIO: int = 6
