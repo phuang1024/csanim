@@ -18,8 +18,8 @@
 #
 
 import numpy as np
-from constants import *
-from utils import bounds
+from .constants import *
+from .utils import bounds
 
 
 def cut(img1, img2, fac):
