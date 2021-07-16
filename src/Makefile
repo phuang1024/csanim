@@ -19,10 +19,11 @@
 
 CXX = /usr/bin/g++
 CXX_FLAGS = -Wall -O3 -c -fPIC
-CXX_FILES = draw.cpp
+CXX_FILES = draw.cpp interp.cpp
 
 
 all:
 	$(CXX) $(CXX_FLAGS) $(CXX_FILES)
 	$(CXX) -shared -o libdraw.so draw.o
+	$(CXX) -shared -o libinterp.so interp.o
 	rm *.o
