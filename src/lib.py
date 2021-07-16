@@ -22,25 +22,24 @@ import ctypes
 import numpy as np
 from typing import Tuple
 from numpy import ctypeslib as ctl
+import cv2
 
 PARENT = os.path.dirname(os.path.realpath(__file__))
+
 AR_FLAGS = "aligned, c_contiguous"
+UINT = ctypes.c_uint32
+DOUB = ctypes.c_double
 
 
 class draw:
     lib = ctypes.CDLL(os.path.join(PARENT, "libdraw.so"))
     lib.circle.argtypes = [
         ctl.ndpointer(dtype=np.uint8, ndim=3, flags=AR_FLAGS),
-        ctypes.c_uint32,
-        ctypes.c_uint32,
-        ctypes.c_double,
-        ctypes.c_double,
-        ctypes.c_double,
-        ctypes.c_double,
-        ctypes.c_double,
-        ctypes.c_double,
-        ctypes.c_double,
-        ctypes.c_double,
+        UINT, UINT, *[DOUB for _ in range(8)]
+    ]
+    lib.rect.argtypes = [
+        ctl.ndpointer(dtype=np.uint8, ndim=3, flags=AR_FLAGS),
+        UINT, UINT, *[DOUB for _ in range(14)]
     ]
 
     @staticmethod
@@ -49,3 +48,11 @@ class draw:
         assert img.dtype == np.uint8
         color = (*color, 255) if len(color) == 3 else color
         draw.lib.circle(img, img.shape[1], img.shape[0], *center, radius, border, *color)
+
+    @staticmethod
+    def rect(img: np.ndarray, color: Tuple[float, ...], dims: Tuple[float, float, float, float],
+            border: float = 0, border_radius: float = 0, tl_rad: float = -1, tr_rad: float = -1,
+            bl_rad: float = -1, br_rad: float = -1) -> None:
+        assert img.dtype == np.uint8
+        color = (*color, 255) if len(color) == 3 else color
+        draw.lib.rect(img, img.shape[1], img.shape[0], *dims, border, border_radius, tl_rad, tr_rad, bl_rad, br_rad, *color)

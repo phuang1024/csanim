@@ -25,6 +25,7 @@ using std::max;
 
 typedef  unsigned char  UCH;
 typedef  unsigned int   UINT;
+typedef  const double   CD;
 
 
 void set(UCH* img, const UINT width, const UINT x, const UINT y, const UCH channel, const UCH value) {
@@ -48,12 +49,12 @@ void getc(UCH* img, const UINT width, const UINT x, const UINT y, UCH* color) {
 }
 
 
-void mix(UCH* dest, const UCH* c1, const UCH* c2, const double fac) {
+void mix(UCH* dest, const UCH* c1, const UCH* c2, CD fac) {
     for (int i = 0; i < 3; i++)
         dest[i] = c1[i]*(1-fac) + c2[i]*fac;
 }
 
-double pythag(const double dx, const double dy) {
+double pythag(CD dx, CD dy) {
     return std::pow((dx*dx) + (dy*dy), 0.5);
 }
 
@@ -61,32 +62,99 @@ int ibounds(const int v, const int vmin = 0, const int vmax = 1) {
     return min(max(v, vmin), vmax);
 }
 
-double dbounds(const double v, const double vmin = 0, const double vmax = 1) {
+double dbounds(CD v, CD vmin = 0, CD vmax = 1) {
     return min(max(v, vmin), vmax);
 }
 
 
-extern "C" void circle(UCH* img, const UINT width, const UINT height, const double cx, const double cy,
-        const double rad, const double border, const double r, const double g, const double b, const double a) {
+extern "C" void circle(UCH* img, const UINT width, const UINT height, CD cx, CD cy,
+        CD rad, CD border, CD r, CD g, CD b, CD a) {
     const int xmin = max((int)(cx-rad-1), 0);
     const int xmax = min((int)(cx+rad+1), (int)width-1);
     const int ymin = max((int)(cy-rad-1), 0);
     const int ymax = min((int)(cy+rad+1), (int)height-1);
 
-    const double afac = a / 255;
-    const double out_thres = rad;
-    const double in_thres = (border == 0 ? 0 : (rad-border));
+    CD afac = a / 255;
+    CD out_thres = rad;
+    CD in_thres = (border == 0 ? 0 : (rad-border));
     const UCH c1[3] = {(UCH)r, (UCH)g, (UCH)b};
 
     for (int x = xmin; x <= xmax; x++) {
         for (int y = ymin; y <= ymax; y++) {
-            const double dist = pythag(x-cx, y-cy);
-            const double out_fac = dbounds(out_thres-dist+1);
-            const double in_fac = dbounds(dist-in_thres+1);
+            CD dist = pythag(x-cx, y-cy);
+            CD out_fac = dbounds(out_thres-dist+1);
+            CD in_fac = dbounds(dist-in_thres+1);
 
             UCH c2[3], color[3];
             getc(img, width, x, y, c2);
             mix(color, c2, c1, out_fac*in_fac*afac);
+            setc(img, width, x, y, color[0], color[1], color[2]);
+        }
+    }
+}
+
+extern "C" void rect(UCH* img, const UINT width, const UINT height, CD dx, CD dy, CD dw, CD dh,
+        CD border, CD border_rad, CD tl_rad, CD tr_rad, CD bl_rad, CD br_rad, CD r, CD g, CD b, CD a) {
+    CD radii[4] = {
+        (tl_rad < 0) ? border_rad : tl_rad,
+        (tr_rad < 0) ? border_rad : tr_rad,
+        (br_rad < 0) ? border_rad : br_rad,
+        (bl_rad < 0) ? border_rad : bl_rad,
+    };
+    double thresholds[4];
+    for (int i = 0; i < 4; i++)
+        thresholds[i] = ((border == 0) ? 0 : (radii[i]-border));
+
+    CD afac = a / 255;
+    const UCH c1[3] = {(UCH)r, (UCH)g, (UCH)b};
+
+    const int xmin = max((int)(dx-1), 0);
+    const int xmax = min((int)(dx+dw+1), (int)width);
+    const int ymin = max((int)(dy-1), 0);
+    const int ymax = min((int)(dy+dh+1), (int)height);
+    for (int x = xmin; x <= xmax; x++) {
+        for (int y = ymin; y <= ymax; y++) {
+            bool is_corner = false;
+            UCH corner_no;
+            double corner_pos[2];
+            if (x < dx+radii[0] && y < dy+radii[0]) {
+                is_corner = true;
+                corner_no = 0;
+                corner_pos[0] = dx+radii[0];
+                corner_pos[1] = dy+radii[0];
+            } else if (x > dx+dw-radii[1] && y < dy+radii[1]) {
+                is_corner = true;
+                corner_no = 1;
+                corner_pos[0] = dx+dw-radii[1];
+                corner_pos[1] = dy+radii[1];
+            } else if (x > dx+dw-radii[2] && y > dy+dh-radii[2]) {
+                is_corner = true;
+                corner_no = 2;
+                corner_pos[0] = dx+dw-radii[2];
+                corner_pos[1] = dy+dh-radii[2];
+            } else if (x < dx+radii[3] && y > dy+dh-radii[3]) {
+                is_corner = true;
+                corner_no = 3;
+                corner_pos[0] = dx+radii[3];
+                corner_pos[1] = dy+dh-radii[3];
+            }
+
+            double final_fac;
+            if (is_corner) {
+                CD dist = pythag(x-corner_pos[0], y-corner_pos[1]);
+                CD out_fac = dbounds(radii[corner_no]-dist+1);
+                CD in_fac = dbounds(dist-thresholds[corner_no]+1);
+                final_fac = out_fac*in_fac*afac;
+            } else {
+                CD out_fac = dbounds(x-dx+1) * dbounds(dx+dw-x+1) * dbounds(y-dy+1) * dbounds(dy+dh-y+1);
+                CD in_fac = (border == 0) ? 1 :
+                    dbounds(dx+border-x+1) + dbounds(x-(dx+dw-border)+1) + dbounds(dy+border-y+1) + dbounds(y-(dy+dh-border)+1);
+                final_fac = out_fac*in_fac*afac;
+            }
+
+            UCH c2[3], color[3];
+            getc(img, width, x, y, c2);
+            mix(color, c2, c1, final_fac);
             setc(img, width, x, y, color[0], color[1], color[2]);
         }
     }
