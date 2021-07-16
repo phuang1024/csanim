@@ -16,3 +16,10 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
+
+typedef  const double  CD;
+
+
+extern "C" double linear(CD f1, CD f2, CD v1, CD v2, CD frame) {
+    return v1 + (v2-v1)*((frame-f1)/(f2-f1));
+}
