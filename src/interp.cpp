@@ -17,9 +17,20 @@
 //  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 
+#define  PI  3.1415926535
+
+#include <cmath>
+
 typedef  const double  CD;
 
 
 extern "C" double linear(CD f1, CD f2, CD v1, CD v2, CD frame) {
-    return v1 + (v2-v1)*((frame-f1)/(f2-f1));
+    CD fac = (frame-f1) / (f2-f1);
+    return v1 + (v2-v1)*fac;
+}
+
+extern "C" double sine(CD f1, CD f2, CD v1, CD v2, CD frame) {
+    CD fac = (frame-f1) / (f2-f1);
+    CD new_fac = std::sin((PI*fac)-(PI/2));
+    return v1 + (v2-v1)*new_fac;
 }

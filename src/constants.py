@@ -20,7 +20,7 @@
 __all__ = [
     "I_CONST",
     "I_LIN",
-    "I_PARABOLA",
+    "I_SINE",
     "I_BOUNCE",
     "T_CUT",
     "T_FADE",
@@ -29,7 +29,7 @@ __all__ = [
 
 I_CONST: int = 0
 I_LIN: int = 1
-I_PARABOLA: int = 2
+I_SINE: int = 2
 I_BOUNCE: int = 3
 T_CUT: int = 4
 T_FADE: int = 5

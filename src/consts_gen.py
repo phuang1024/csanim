@@ -28,7 +28,7 @@ FILE = os.path.join(PARENT, "constants.py")
 CONSTS = [
     "I_CONST",
     "I_LIN",
-    "I_PARABOLA",
+    "I_SINE",
     "I_BOUNCE",
 
     "T_CUT",
