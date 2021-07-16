@@ -26,9 +26,9 @@ import os
 PARENT = os.path.dirname(os.path.realpath(__file__))
 FILE = os.path.join(PARENT, "constants.py")
 CONSTS = [
-    "TR_CUT",
-    "TR_FADE",
-    "TR_FADEIO",
+    "T_CUT",
+    "T_FADE",
+    "T_FADEIO",
 ]
 
 

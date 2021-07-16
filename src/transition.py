@@ -46,10 +46,10 @@ def transition(img1: np.ndarray, img2: np.ndarray, fac: float, mode: int) -> np.
     :param fac: Factor of transition. -1 = full img1, 1 = full img2
     :param mode: Transition mode, found in csanim.constants
     """
-    if mode == TR_CUT:
+    if mode == T_CUT:
         return cut(img1, img2, fac)
-    elif mode == TR_FADE:
+    elif mode == T_FADE:
         return fade(img1, img2, fac)
-    elif mode == TR_FADEIO:
+    elif mode == T_FADEIO:
         return fadeio(img1, img2, fac)
     raise NotImplementedError

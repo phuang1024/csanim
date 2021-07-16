@@ -18,11 +18,11 @@
 #
 
 __all__ = [
-    "TR_CUT",
-    "TR_FADE",
-    "TR_FADEIO",
+    "T_CUT",
+    "T_FADE",
+    "T_FADEIO",
 ]
 
-TR_CUT: int = 0
-TR_FADE: int = 1
-TR_FADEIO: int = 2
+T_CUT: int = 0
+T_FADE: int = 1
+T_FADEIO: int = 2
