@@ -7,13 +7,16 @@ on:
     branches: [ main ]
 
 jobs:
-  compile:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Compilation
         run: |
           make
+      - name: Import
+        run: |
+          python -c "import src"
 
   formatting:
     runs-on: ubuntu-latest
