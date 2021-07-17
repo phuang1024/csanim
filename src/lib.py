@@ -32,6 +32,9 @@ DOUB = ctypes.c_double
 
 
 class draw:
+    """
+    Namespace for graphical drawing functions.
+    """
     lib = ctypes.CDLL(os.path.join(PARENT, "libdraw.so"))
     lib.circle.argtypes = [
         ctl.ndpointer(dtype=np.uint8, ndim=3, flags=AR_FLAGS),
@@ -56,3 +59,24 @@ class draw:
         assert img.dtype == np.uint8
         color = (*color, 255) if len(color) == 3 else color
         draw.lib.rect(img, img.shape[1], img.shape[0], *dims, border, border_radius, tl_rad, tr_rad, bl_rad, br_rad, *color)
+
+
+class interp:
+    """
+    Namespace for interpolation functions.
+    """
+    lib = ctypes.CDLL(os.path.join(PARENT, "libinterp.so"))
+    lib.linear.argtypes = [DOUB for _ in range(5)]
+    lib.sine.argtypes = [DOUB for _ in range(5)]
+
+    @staticmethod
+    def constant(f1, f2, v1, v2, frame):
+        return v1
+
+    @staticmethod
+    def linear(f1, f2, v1, v2, frame):
+        return interp.lib.linear(f1, f2, v1, v2, frame)
+
+    @staticmethod
+    def sine(f1, f2, v1, v2, frame):
+        return interp.lib.sine(f1, f2, v1, v2, frame)
