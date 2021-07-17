@@ -53,3 +53,28 @@ class Circle(Element):
         radius = self.radius.value(frame)
         border = self.border.value(frame)
         lib.draw.circle(img, color, center, radius, border)
+
+
+class Rect(Element):
+    color: VectorProp
+    loc: VectorProp
+    size: VectorProp
+    border: FloatProp
+    border_radius: FloatProp
+
+    def __init__(self, color: Tuple[float, ...] = (255, 255, 255, 255), loc: Tuple[float, float] = (0, 0),
+            size: Tuple[float, float] = (0, 0), border: float = 0, border_radius: float = 0) -> None:
+        super().__init__()
+        self.color = VectorProp(FloatProp, 4, color)
+        self.loc = VectorProp(FloatProp, 2, loc)
+        self.size = VectorProp(FloatProp, 2, size)
+        self.border = FloatProp(border)
+        self.border_radius = FloatProp(border_radius)
+
+    def render(self, img: np.ndarray, frame: float) -> None:
+        color = self.color.value(frame)
+        loc = self.loc.value(frame)
+        size = self.size.value(frame)
+        border = self.border.value(frame)
+        border_radius = self.border_radius.value(frame)
+        lib.draw.rect(img, color, (*loc, *size), border, border_radius)
