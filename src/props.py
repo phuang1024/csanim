@@ -53,7 +53,8 @@ class Property:
         """
         Add a keyframe.
         """
-        assert (interp in self.supported_interps), "Interpolation not supported."
+        if self.supported_interps != "ALL":
+            assert (interp in self.supported_interps), "Interpolation not supported."
         self.keyframes.append(Keyframe(frame, value, interp))
 
     def value(self, frame: float) -> Any:
@@ -61,14 +62,27 @@ class Property:
         Get value at frame, depending on keyframes.
         If no keyframes are present, the default is returned.
         """
+        return interpolate(self.keyframes, frame, self.default)
 
 
 class BoolProp(Property):
     type = bool
     supported_interps = (I_CONST,)
 
+class IntProp(Property):
+    type = int
+    supported_interps = "ALL"
 
-def interpolate(keyframes: List[Keyframe], frame: int, default: Any) -> Any:
+class FloatProp(Property):
+    type = float
+    supported_interps = "ALL"
+
+class StrProp(Property):
+    type = str
+    supported_interps = (I_CONST,)
+
+
+def interpolate(keyframes: List[Keyframe], frame: float, default: Any) -> Any:
     if len(keyframes) == 0:
         return default
 
