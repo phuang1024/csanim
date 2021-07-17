@@ -19,6 +19,13 @@
 
 from typing import Any, List, Tuple, Type
 from .constants import *
+from . import lib
+
+INTERPS = {
+    I_CONST: "constant",
+    I_LIN: "linear",
+    I_SINE: "sine",
+}
 
 
 class Keyframe:
@@ -59,3 +66,33 @@ class Property:
 class BoolProp(Property):
     type = bool
     supported_interps = (I_CONST,)
+
+
+def interpolate(keyframes: List[Keyframe], frame: int, default: Any) -> Any:
+    if len(keyframes) == 0:
+        return default
+
+    elif len(keyframes) == 1:
+        return keyframes[0].value
+
+    else:
+        if frame <= keyframes[0].frame:
+            return keyframes[0].value
+        elif frame >= keyframes[-1].frame:
+            return keyframes[-1].value
+        else:
+            ind = 0
+            for i in range(len(keyframes)):
+                if keyframes[i].frame == frame:
+                    return keyframes[i].value
+                if keyframes[i].frame > frame:
+                    ind = i - 1
+                    break
+
+            f1 = keyframes[ind].frame
+            f2 = keyframes[ind+1].frame
+            v1 = keyframes[ind].value
+            v2 = keyframes[ind+1].value
+
+            func = INTERPS[keyframes[ind].interp]
+            return getattr(lib.interp, func)(f1, f2, v1, v2, frame)
