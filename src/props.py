@@ -17,6 +17,14 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
+__all__ = (
+    "VectorProp",
+    "BoolProp",
+    "IntProp",
+    "FloatProp",
+    "StrProp",
+)
+
 from typing import Any, List, Tuple, Type
 from .constants import *
 from . import lib
@@ -68,9 +76,9 @@ class VectorProp:
     type: Type[Property]
     length: int
     props: List[Property]
-    defaults: Tuple[Any]
+    defaults: Tuple[Any, ...]
 
-    def __init__(self, type: Type[Property], length: int, defaults: Tuple[Any]) -> None:
+    def __init__(self, type: Type[Property], length: int, defaults: Tuple[Any, ...]) -> None:
         self.type = type
         self.length = length
         self.props = [type(defaults[i]) for i in range(length)]
@@ -79,7 +87,7 @@ class VectorProp:
     def __getitem__(self, idx: int) -> Property:
         return self.props[idx]
 
-    def key(self, frame: float, values: Tuple[Any], interp: int) -> None:
+    def key(self, frame: float, values: Tuple[Any, ...], interp: int) -> None:
         for i in range(self.length):
             self.props[i].key(frame, values[i], interp)
 
