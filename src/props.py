@@ -64,6 +64,24 @@ class Property:
         """
         return interpolate(self.keyframes, frame, self.default)
 
+class VectorProp:
+    type: Type[Property]
+    length: int
+    props: List[Property]
+    defaults: Tuple[Any]
+
+    def __init__(self, type: Type[Property], length: int, defaults: Tuple[Any]) -> None:
+        self.type = type
+        self.length = length
+        self.props = [type(defaults[i]) for i in range(length)]
+        self.defaults = defaults
+
+    def key(self, frame: float, values: Tuple[Any], interp: int) -> None:
+        for i in range(self.length):
+            self.props[i].key(frame, values[i], interp)
+
+    def value(self, frame: float) -> List[Any]:
+        return [self.props[i].value(frame) for i in range(self.length)]
 
 class BoolProp(Property):
     type = bool
