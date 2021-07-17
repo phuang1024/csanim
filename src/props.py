@@ -76,6 +76,9 @@ class VectorProp:
         self.props = [type(defaults[i]) for i in range(length)]
         self.defaults = defaults
 
+    def __getitem__(self, idx: int) -> Property:
+        return self.props[idx]
+
     def key(self, frame: float, values: Tuple[Any], interp: int) -> None:
         for i in range(self.length):
             self.props[i].key(frame, values[i], interp)
