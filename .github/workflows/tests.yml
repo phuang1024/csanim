@@ -1,0 +1,36 @@
+name: Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Compilation
+        run: |
+          make
+
+  formatting:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run check
+        run: |
+          python3 ./tests/formatting.py
+
+  # docs:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: Install packages
+  #       run: pip install sphinx sphinx-rtd-theme
+  #     - name: Build docs
+  #       run: |
+  #         cd ./docs
+  #         mkdir ./_static ./_templates
+  #         make html SPHINXOPTS="-W --keep-going"
