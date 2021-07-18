@@ -46,6 +46,7 @@ class Scene:
     def render(self, resolution: Tuple[int, int], frame: float) -> np.ndarray:
         img = np.zeros((*resolution[::-1], 3), dtype=np.uint8)
         for element in self.elements:
-            element.render(img, frame)
+            if element.show.value(frame) and element.relevant(frame):
+                element.render(img, frame)
         # TODO transition
         return img

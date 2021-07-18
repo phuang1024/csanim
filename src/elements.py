@@ -29,6 +29,9 @@ class Element:
     def __init__(self) -> None:
         self.show = BoolProp(True)
 
+    def relevant(self, frame: float) -> bool:
+        return True
+
     def render(self, img: np.ndarray, frame: float) -> None:
         ...
 
@@ -39,6 +42,10 @@ class Fill(Element):
     def __init__(self, color: Tuple[float, ...] = (0, 0, 0, 255)) -> None:
         super().__init__()
         self.color = VectorProp(FloatProp, 4, color)
+
+    def relevant(self, frame: float) -> bool:
+        color = self.color.value(frame)
+        return color[3] != 0
 
     def render(self, img: np.ndarray, frame: float) -> None:
         color = self.color.value(frame)
@@ -64,6 +71,10 @@ class Circle(Element):
         self.radius = FloatProp(radius)
         self.border = FloatProp(border)
 
+    def relevant(self, frame: float) -> bool:
+        color = self.color.value(frame)
+        return color[3] != 0
+
     def render(self, img: np.ndarray, frame: float) -> None:
         color = self.color.value(frame)
         center = self.center.value(frame)
@@ -87,6 +98,10 @@ class Rect(Element):
         self.size = VectorProp(FloatProp, 2, size)
         self.border = FloatProp(border)
         self.border_radius = FloatProp(border_radius)
+
+    def relevant(self, frame: float) -> bool:
+        color = self.color.value(frame)
+        return color[3] != 0
 
     def render(self, img: np.ndarray, frame: float) -> None:
         color = self.color.value(frame)
