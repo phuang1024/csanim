@@ -55,6 +55,7 @@ setuptools.setup(
         "License :: OSI Approved :: GNU General Public License v2 or later (GPLv2+)",
         "Operating System :: OS Independent",
     ],
+    include_package_data=True,
 )
 
 shutil.rmtree(DEST)
