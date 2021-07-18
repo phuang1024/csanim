@@ -20,11 +20,14 @@
 import os
 import ctypes
 import numpy as np
-from typing import Tuple
+from typing import Tuple, Union
 from numpy import ctypeslib as ctl
-import cv2
+from PIL import Image, ImageFont, ImageDraw
+from .constants import *
 
 PARENT = os.path.dirname(os.path.realpath(__file__))
+FONTS = os.path.join(PARENT, "fonts")
+ROBOTO = os.path.join(FONTS, "roboto_mono.ttf")
 
 AR_FLAGS = "aligned, c_contiguous"
 UINT = ctypes.c_uint32
@@ -59,6 +62,21 @@ class draw:
         assert img.dtype == np.uint8
         color = (*color, 255) if len(color) == 3 else color
         draw.lib.rect(img, img.shape[1], img.shape[0], *dims, border, border_radius, tl_rad, tr_rad, bl_rad, br_rad, *color)
+
+    @staticmethod
+    def text(img: np.ndarray, color: Tuple[float, ...], loc: Tuple[float, float], text: str,
+            font: Union[int, str], font_size: int) -> None:
+        if isinstance(font, int):
+            if font == F_CODE:
+                real_font = ImageFont.truetype(ROBOTO, font_size)
+            else:
+                raise ValueError(f"Invalid font code: {font}")
+        else:
+            real_font = ImageFont.truetype(font, font_size)
+
+        pil = Image.fromarray(img)
+        ImageDraw.Draw(pil).text(loc, text, color[:3][::-1], real_font)
+        img[:] = np.array(pil)
 
 
 class interp:
