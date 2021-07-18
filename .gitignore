@@ -4,3 +4,6 @@ __pycache__
 *.o
 *.obj
 *.so
+
+/*_imgs
+/*.mp4
