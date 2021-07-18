@@ -17,8 +17,16 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
+import sys
+import os
+import subprocess
+import time
+import cv2
 from typing import List, Tuple
 from .scene import Scene
+from .utils import loading
+
+FFMPEG = "/usr/bin/ffmpeg"
 
 
 class Video:
@@ -39,11 +47,40 @@ class Video:
         self.resolution = resolution
         self.scenes = []
 
-    def __repr__(self) -> str:
-        return f"<csanim.Video(nscenes={len(self.scenes)}>"
-
-    def __str__(self) -> str:
-        return repr(self)
-
-    def add_scene(self, scene: Scene):
+    def add_scene(self, scene: Scene) -> None:
         self.scenes.append(scene)
+
+    def render(self, path: str, vencode: str = "libx265") -> None:
+        if os.path.isfile(path) and input(f"Path {path} exists. Overwrite? [y/N] ").strip().lower() != "y":
+            return
+
+        dir_path = path + "_imgs"
+        os.makedirs(dir_path, exist_ok=True)
+
+        frame = 0
+        for scene in self.scenes:
+            for f in range(scene.length):
+                sys.stdout.write("\r"+" "*80+"\r")
+                sys.stdout.write(f"Rendering frame {frame}")
+                sys.stdout.flush()
+
+                img = scene.render(self.resolution, f)
+                fpath = os.path.join(dir_path+"_imgs", f"{frame}.jpg")
+                cv2.imwrite(fpath, img)
+                frame += 1
+
+        args = [FFMPEG, "-y", "-i", os.path.join(dir_path, "%d.jpg"), "-c:v", vencode, "-f", str(self.fps), path]
+        proc = subprocess.Popen(args, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+        chars = loading()
+        while proc.poll() is None:
+            sys.stdout.write("\r"+" "*80+"\r")
+            sys.stdout.write(f"Compiling images to video...{next(chars)}")
+            sys.stdout.flush()
+            time.sleep(0.1)
+
+        sys.stdout.write("\r"+" "*80+"\r")
+        if proc.returncode == 0:
+            print(f"Finished exporting {frame} frames.")
+        else:
+            print(f"Video compilation failed. Rendered images are in {dir_path}.")
