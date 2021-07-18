@@ -26,6 +26,8 @@ import os
 PARENT = os.path.dirname(os.path.realpath(__file__))
 FILE = os.path.join(PARENT, "constants.py")
 CONSTS = [
+    "F_CODE",
+
     "I_CONST",
     "I_LIN",
     "I_SINE",

@@ -18,6 +18,7 @@
 #
 
 __all__ = [
+    "F_CODE",
     "I_CONST",
     "I_LIN",
     "I_SINE",
@@ -27,10 +28,11 @@ __all__ = [
     "T_FADEIO",
 ]
 
-I_CONST: int = 0
-I_LIN: int = 1
-I_SINE: int = 2
-I_BOUNCE: int = 3
-T_CUT: int = 4
-T_FADE: int = 5
-T_FADEIO: int = 6
+F_CODE: int = 0
+I_CONST: int = 1
+I_LIN: int = 2
+I_SINE: int = 3
+I_BOUNCE: int = 4
+T_CUT: int = 5
+T_FADE: int = 6
+T_FADEIO: int = 7
