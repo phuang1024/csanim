@@ -20,3 +20,8 @@
 
 def bounds(v: float, vmin: float = 0, vmax: float = 1):
     return max(min(v, vmax), vmin)
+
+
+def loading():
+    while True:
+        yield from "-\\|/"
