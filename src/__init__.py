@@ -57,6 +57,8 @@ def check_libs():
 
 if check_libs():
     from .constants import *
+    from .elements import *
+    from . import props
     from .scene import *
     from .video import Video
 else:
