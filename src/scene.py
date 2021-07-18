@@ -40,6 +40,9 @@ class Scene:
         self.trans_len = trans_len
         self.elements = []
 
+    def add_element(self, element: Element) -> None:
+        self.elements.append(element)
+
     def render(self, resolution: Tuple[int, int], frame: float) -> np.ndarray:
         img = np.zeros((*resolution, 3))
         for element in self.elements:
