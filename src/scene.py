@@ -21,9 +21,28 @@ __all__ = [
     "Scene",
 ]
 
+import numpy as np
+from typing import List, Tuple
 from .constants import *
 from .transition import transition
+from .elements import Element
 
 
 class Scene:
-    pass
+    length: int
+    trans_start: int
+    trans_len: float
+    elements: List[Element]
+
+    def __init__(self, length: int, trans_start: int = T_CUT, trans_len: float = 1.5):
+        self.length = length
+        self.trans_start = trans_start
+        self.trans_len = trans_len
+        self.elements = []
+
+    def render(self, resolution: Tuple[int, int], frame: float) -> np.ndarray:
+        img = np.zeros((*resolution, 3))
+        for element in self.elements:
+            element.render(img, frame)
+        # TODO transition
+        return img
