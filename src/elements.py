@@ -20,7 +20,7 @@
 import numpy as np
 from typing import Tuple
 from .props import *
-from . import lib
+from .lib import draw
 
 
 class Element:
@@ -31,6 +31,23 @@ class Element:
 
     def render(self, img: np.ndarray, frame: float) -> None:
         ...
+
+
+class Fill(Element):
+    color: VectorProp
+
+    def __init__(self, color: Tuple[float, ...] = (0, 0, 0, 255)) -> None:
+        super().__init__()
+        self.color = VectorProp(FloatProp, 4, color)
+
+    def render(self, img: np.ndarray, frame: float) -> None:
+        color = self.color.value(frame)
+        alpha = color[-1] / 255
+
+        fill = np.full(img.shape, color[:3], dtype=np.uint8)
+        new = fill*alpha + img*(1-alpha)
+
+        img[:] = new
 
 
 class Circle(Element):
@@ -52,7 +69,7 @@ class Circle(Element):
         center = self.center.value(frame)
         radius = self.radius.value(frame)
         border = self.border.value(frame)
-        lib.draw.circle(img, color, center, radius, border)
+        draw.circle(img, color, center, radius, border)
 
 
 class Rect(Element):
@@ -77,4 +94,4 @@ class Rect(Element):
         size = self.size.value(frame)
         border = self.border.value(frame)
         border_radius = self.border_radius.value(frame)
-        lib.draw.rect(img, color, (*loc, *size), border, border_radius)
+        draw.rect(img, color, (*loc, *size), border, border_radius)
