@@ -65,11 +65,11 @@ class Video:
                 sys.stdout.flush()
 
                 img = scene.render(self.resolution, f)
-                fpath = os.path.join(dir_path+"_imgs", f"{frame}.jpg")
+                fpath = os.path.join(dir_path, f"{frame}.jpg")
                 cv2.imwrite(fpath, img)
                 frame += 1
 
-        args = [FFMPEG, "-y", "-i", os.path.join(dir_path, "%d.jpg"), "-c:v", vencode, "-f", str(self.fps), path]
+        args = [FFMPEG, "-y", "-i", os.path.join(dir_path, "%d.jpg"), "-c:v", vencode, "-r", str(self.fps), path]
         proc = subprocess.Popen(args, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
         chars = loading()
