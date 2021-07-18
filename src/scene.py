@@ -44,7 +44,7 @@ class Scene:
         self.elements.append(element)
 
     def render(self, resolution: Tuple[int, int], frame: float) -> np.ndarray:
-        img = np.zeros((*resolution, 3), dtype=np.uint8)
+        img = np.zeros((*resolution[::-1], 3), dtype=np.uint8)
         for element in self.elements:
             element.render(img, frame)
         # TODO transition

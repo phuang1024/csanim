@@ -67,7 +67,9 @@ class interp:
     """
     lib = ctypes.CDLL(os.path.join(PARENT, "libinterp.so"))
     lib.linear.argtypes = [DOUB for _ in range(5)]
+    lib.linear.restype = ctypes.c_double
     lib.sine.argtypes = [DOUB for _ in range(5)]
+    lib.sine.restype = ctypes.c_double
 
     @staticmethod
     def constant(f1, f2, v1, v2, frame):
