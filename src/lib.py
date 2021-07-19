@@ -17,6 +17,10 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
+"""
+Loads and handles Shared Object libraries.
+"""
+
 import os
 import ctypes
 import numpy as np
@@ -51,6 +55,14 @@ class draw:
     @staticmethod
     def circle(img: np.ndarray, color: Tuple[float, ...], center: Tuple[float, float],
             radius: float, border: float = 0):
+        """
+        Draws a circle.
+        :param img: Image.
+        :param color: RGB or RGBA color.
+        :param center: (X, Y) center.
+        :param radius: Radius.
+        :param border: Border thickness. Set to 0 for no border.
+        """
         assert img.dtype == np.uint8
         color = (*color, 255) if len(color) == 3 else color
         draw.lib.circle(img, img.shape[1], img.shape[0], *center, radius, border, *color)
@@ -59,6 +71,18 @@ class draw:
     def rect(img: np.ndarray, color: Tuple[float, ...], dims: Tuple[float, float, float, float],
             border: float = 0, border_radius: float = 0, tl_rad: float = -1, tr_rad: float = -1,
             bl_rad: float = -1, br_rad: float = -1) -> None:
+        """
+        Draws a rectangle.
+        :param img: Image.
+        :param color: RGB or RGBA color.
+        :param dims: (X, Y, W, H) dimensions.
+        :param border: Border thickness.
+        :param border_radius: Corner rounding radius.
+        :param tl_rad: Top left corner radius.
+        :param tr_rad: Top right corner radius.
+        :param bl_rad: Bottom left corner radius.
+        :param br_rad: Bottom right corner radius.
+        """
         assert img.dtype == np.uint8
         color = (*color, 255) if len(color) == 3 else color
         draw.lib.rect(img, img.shape[1], img.shape[0], *dims, border, border_radius, tl_rad, tr_rad, bl_rad, br_rad, *color)
@@ -66,6 +90,15 @@ class draw:
     @staticmethod
     def text(img: np.ndarray, color: Tuple[float, ...], loc: Tuple[float, float], text: str,
             font: Union[int, str], font_size: int) -> None:
+        """
+        Draws text.
+        :param img: Image.
+        :param color: RGB or RGBA color.
+        :param loc: (X, Y) location of top left corner.
+        :param text: String text to render.
+        :param font: Font. Integer = builtin constant (F_CODE), str = font path (/path/a.ttf)
+        :param font_size: Font size.
+        """
         if isinstance(font, int):
             if font == F_CODE:
                 real_font = ImageFont.truetype(ROBOTO, font_size)
@@ -91,12 +124,22 @@ class interp:
 
     @staticmethod
     def constant(f1, f2, v1, v2, frame):
+        """
+        Constant interpolation.
+        Always returns the first value.
+        """
         return v1
 
     @staticmethod
     def linear(f1, f2, v1, v2, frame):
+        """
+        Linear interpolation.
+        """
         return interp.lib.linear(f1, f2, v1, v2, frame)
 
     @staticmethod
     def sine(f1, f2, v1, v2, frame):
+        """
+        Sine interpolation.
+        """
         return interp.lib.sine(f1, f2, v1, v2, frame)
