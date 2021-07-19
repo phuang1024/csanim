@@ -16,7 +16,7 @@ import the module:
     csanim: libinterp.so missing
     csanim: some libraries missing.
     csanim: compile libraries? [y/N] y
-    csanim: running "make" in /home/patrick/.virtualenvs/general/lib/python3.8/site-packages/csanim
+    csanim: running "make" in /path/to/csanim
     /usr/bin/g++ -Wall -O3 -c -fPIC draw.cpp interp.cpp
     /usr/bin/g++ -shared -o libdraw.so draw.o
     /usr/bin/g++ -shared -o libinterp.so interp.o
