@@ -86,14 +86,17 @@ class SceneCode(Scene):
 
     def typewrite(self, text: str, delay: float = 0.5) -> float:
         for char in text:
+            self._time += delay
+
             value = self._text.value(self._time)
             cursor = self._cursor.value(self._time)
-            cursor[0] += 1
+            new_cursor = [cursor[0]+1, cursor[1]]
 
             self._text.key(self._time, value+char)
             self._cursor.key(self._time, cursor)
-            self._time += delay
+            self._cursor.key(self._time+min(delay, 0.05), new_cursor)
 
+        self._time += delay
         self._max_time = max(self._time, self._max_time)
         return self._time
 
@@ -111,6 +114,6 @@ class SceneCode(Scene):
             draw.text(img, (255, 255, 255), (x, 1), char, font, font_size)
 
         cursor_x = cursor[0] * char_width
-        draw.rect(img, (255, 255, 255), (cursor_x-1, 0, 2, 20))
+        draw.rect(img, (255, 255, 255), (cursor_x, 0, 1, 20))
 
         return img
