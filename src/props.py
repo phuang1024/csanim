@@ -51,16 +51,19 @@ class Property:
     type: Type
     default: Any
     supported_interps: Tuple[int]
+    default_interp: int
     keyframes: List[Keyframe]
 
     def __init__(self, default: Any) -> None:
         self.keyframes = []
         self.default = default
 
-    def key(self, frame: float, value: Any, interp: int) -> None:
+    def key(self, frame: float, value: Any, interp: int = None) -> None:
         """
         Add a keyframe.
         """
+        if interp is None:
+            interp = self.default_interp
         if self.supported_interps != "ALL":
             assert (interp in self.supported_interps), "Interpolation not supported."
         self.keyframes.append(Keyframe(frame, value, interp))
@@ -87,7 +90,9 @@ class VectorProp:
     def __getitem__(self, idx: int) -> Property:
         return self.props[idx]
 
-    def key(self, frame: float, values: Tuple[Any, ...], interp: int) -> None:
+    def key(self, frame: float, values: Tuple[Any, ...], interp: int = None) -> None:
+        if interp is None:
+            interp = self.type.default_interp
         for i in range(self.length):
             self.props[i].key(frame, values[i], interp)
 
@@ -97,18 +102,22 @@ class VectorProp:
 class BoolProp(Property):
     type = bool
     supported_interps = (I_CONST,)
+    default_interp = I_CONST
 
 class IntProp(Property):
     type = int
     supported_interps = "ALL"
+    default_interp = I_SINE
 
 class FloatProp(Property):
     type = float
     supported_interps = "ALL"
+    default_interp = I_SINE
 
 class StrProp(Property):
     type = str
     supported_interps = (I_CONST,)
+    default_interp = I_CONST
 
 
 def interpolate(keyframes: List[Keyframe], frame: float, default: Any) -> Any:
