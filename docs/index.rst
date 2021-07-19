@@ -8,3 +8,7 @@ A library for creating computer science videos.
    :caption: Contents:
 
    install
+   props
+   elements
+   scene
+   video

@@ -18,8 +18,15 @@
 #
 
 """
-Simple animatable elements that can be applied on scenes.
+Simple animatable elements that build scenes.
 """
+
+__all__ = (
+    "Element",
+    "Fill",
+    "Circle",
+    "Rect",
+)
 
 import numpy as np
 from typing import Tuple

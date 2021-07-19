@@ -18,6 +18,7 @@
 #
 
 __all__ = (
+    "Property",
     "VectorProp",
     "BoolProp",
     "IntProp",

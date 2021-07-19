@@ -31,8 +31,10 @@ __all__ = [
 import numpy as np
 from typing import List, Tuple, Union
 from .constants import *
-from .transition import transition
 from .elements import *
+from .lib import draw
+from .props import *
+from .transition import transition
 
 
 def _empty(resolution: Tuple[int, int]) -> np.ndarray:
