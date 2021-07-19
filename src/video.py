@@ -24,7 +24,7 @@ import time
 import cv2
 from typing import List, Tuple
 from .scene import Scene
-from .utils import loading
+from .utils import ProgressLogger, loading
 
 FFMPEG = "/usr/bin/ffmpeg"
 
@@ -58,19 +58,18 @@ class Video:
         os.makedirs(dir_path, exist_ok=True)
 
         frame = 0
-        start = time.time()
+        total = sum([int(s.length*self.fps) for s in self.scenes])
+        logger = ProgressLogger("Rendering", total)
         for scene in self.scenes:
             for f in range(int(scene.length*self.fps)):
-                sys.stdout.write("\r"+" "*80+"\r")
-                sys.stdout.write(f"Rendering frame {frame}")
-                sys.stdout.flush()
+                logger.update(frame)
+                logger.log()
 
                 img = scene.render(self.resolution, f, self.fps)
                 fpath = os.path.join(dir_path, f"{frame}.jpg")
                 cv2.imwrite(fpath, img)
                 frame += 1
-        elapse = time.time() - start
-        print(f"Finished rendering {frame} frames in {elapse} seconds.")
+        logger.finish(f"Finished rendering {total} in $TIME")
 
         args = [FFMPEG, "-y", "-i", os.path.join(dir_path, "%d.jpg"), "-c:v", vencode, "-r", str(self.fps), path]
         proc = subprocess.Popen(args, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -84,6 +83,6 @@ class Video:
 
         sys.stdout.write("\r"+" "*80+"\r")
         if proc.returncode == 0:
-            print(f"Finished exporting {frame} frames.")
+            print(f"Finished exporting {total} frames.")
         else:
             print(f"Video compilation failed. Rendered images are in {dir_path}.")
