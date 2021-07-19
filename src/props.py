@@ -37,24 +37,46 @@ INTERPS = {
 
 
 class Keyframe:
+    """
+    A keyframe class which contains three values:
+    * frame: The frame.
+    * value: The value. Can be any type.
+    * interp: The interpolation of this keyframe and the next.
+    """
     frame: float
     value: Any
     interp: int
 
     def __init__(self, frame: float, value: Any, interp: int):
+        """
+        Initializes keyframe.
+        """
         self.frame = frame
         self.value = value
         self.interp = interp
 
 
 class Property:
+    """
+    Base property class. All other props extend from this.
+
+    Inherit and define:
+    * type: The property type.
+    * supported_interps: Supported interpolations. "ALL" = all supported.
+    * default_interp: Default interpolation to use.
+    """
     type: Type
-    default: Any
     supported_interps: Tuple[int]
     default_interp: int
+
+    default: Any
     keyframes: List[Keyframe]
 
     def __init__(self, default: Any) -> None:
+        """
+        Initializes the property.
+        :param default: The default value (returned if no keyframes are present).
+        """
         self.keyframes = []
         self.default = default
 
@@ -73,54 +95,95 @@ class Property:
         Get value at frame, depending on keyframes.
         If no keyframes are present, the default is returned.
         """
-        return interpolate(self.keyframes, frame, self.default)
+        return _interpolate(self.keyframes, frame, self.default)
 
 class VectorProp:
+    """
+    A static sized list of props of the same type.
+    """
     type: Type[Property]
     length: int
     props: List[Property]
     defaults: Tuple[Any, ...]
 
     def __init__(self, type: Type[Property], length: int, defaults: Tuple[Any, ...]) -> None:
+        """
+        Initializes the property.
+        :param type: The prop type. e.g. BoolProp, IntProp, ...
+        :param length: Vector length.
+        :param defaults: Default values of all the props. len(defaults) == length
+        """
+        assert length >= 0
+        assert len(defaults) == length
         self.type = type
         self.length = length
         self.props = [type(defaults[i]) for i in range(length)]
         self.defaults = defaults
 
     def __getitem__(self, idx: int) -> Property:
+        """
+        Gets nth property.
+        """
         return self.props[idx]
 
     def key(self, frame: float, values: List[Any], interp: int = None) -> None:
+        """
+        Adds keyframe to all props.
+        To add a keyframe to one prop, do vecprop[i].key()
+        :param frame: Frame.
+        :param values: Values. len(values) == length
+        :param interp: Interpolation for all the props.
+        """
+        assert len(values) == self.length
         if interp is None:
             interp = self.type.default_interp
         for i in range(self.length):
             self.props[i].key(frame, values[i], interp)
 
     def value(self, frame: float) -> List[Any]:
+        """
+        Returns list of all values at frame.
+        """
         return [self.props[i].value(frame) for i in range(self.length)]
 
 class BoolProp(Property):
+    """
+    Boolean property.
+    """
     type = bool
     supported_interps = (I_CONST,)
     default_interp = I_CONST
 
 class IntProp(Property):
+    """
+    Integer property (unbounded).
+    """
     type = int
     supported_interps = "ALL"
     default_interp = I_SINE
 
 class FloatProp(Property):
+    """
+    Float property (64 bit).
+    """
     type = float
     supported_interps = "ALL"
     default_interp = I_SINE
 
 class StrProp(Property):
+    """
+    String property.
+    """
     type = str
     supported_interps = (I_CONST,)
     default_interp = I_CONST
 
 
-def closest_ind(keyframes: List[Keyframe], frame: float) -> int:
+def _closest_ind(keyframes: List[Keyframe], frame: float) -> int:
+    """
+    Internal function.
+    Binary search for the closest index.
+    """
     imin = 0
     imax = len(keyframes) - 1
 
@@ -137,7 +200,11 @@ def closest_ind(keyframes: List[Keyframe], frame: float) -> int:
             imin = mid
 
 
-def interpolate(keyframes: List[Keyframe], frame: float, default: Any) -> Any:
+def _interpolate(keyframes: List[Keyframe], frame: float, default: Any) -> Any:
+    """
+    Internal function.
+    Finds value at frame, given keyframes.
+    """
     if len(keyframes) == 0:
         return default
 
@@ -150,7 +217,7 @@ def interpolate(keyframes: List[Keyframe], frame: float, default: Any) -> Any:
         elif frame >= keyframes[-1].frame:
             return keyframes[-1].value
         else:
-            ind = closest_ind(keyframes, frame)
+            ind = _closest_ind(keyframes, frame)
             f1 = keyframes[ind].frame
             f2 = keyframes[ind+1].frame
             v1 = keyframes[ind].value
