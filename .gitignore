@@ -9,6 +9,10 @@ __pycache__
 /*.mp4
 /test.py
 
+/build/build
+/build/dist
+/build/csanim*
+
 /docs/_build
 /docs/_static
 /docs/_templates
