@@ -17,6 +17,11 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
+"""
+Transitions for the scenes.
+TODO probably going to redesign the whole thing.
+"""
+
 import numpy as np
 from .constants import *
 from .utils import bounds

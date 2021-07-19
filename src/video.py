@@ -17,6 +17,10 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
+"""
+The video class.
+"""
+
 import sys
 import os
 import time
@@ -32,6 +36,7 @@ FFMPEG = "/usr/bin/ffmpeg"
 class Video:
     """
     Base video class.
+    Represents a single video.
     """
     fps: int
     resolution: Tuple[int, int]
@@ -48,9 +53,20 @@ class Video:
         self.scenes = []
 
     def add_scene(self, scene: Scene) -> None:
+        """
+        Adds a scene to the internal list.
+        Scenes play in the order they are added.
+        """
         self.scenes.append(scene)
 
     def render(self, path: str, vencode: str = "libx265") -> None:
+        """
+        Exports video to a video file.
+        Will first render separate images to a tmp folder in the same directory.
+        Requires FFmpeg to put images into video.
+        :param path: Output video file path.
+        :param vencode: Video encoding. H.265 may not be supported, so you can try libx264
+        """
         if os.path.isfile(path) and input(f"Path {path} exists. Overwrite? [y/N] ").strip().lower() != "y":
             return
 

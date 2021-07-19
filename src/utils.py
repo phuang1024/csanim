@@ -17,6 +17,10 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
+"""
+Utilities for internal use.
+"""
+
 import sys
 import shutil
 import time
