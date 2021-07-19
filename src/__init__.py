@@ -17,16 +17,31 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
+"""
+A library for creating computer science explanatory videos.
+Official GitHub: https://github.com/phuang1024/csanim
+"""
+
 import os
 import subprocess
 
 PARENT = os.path.dirname(os.path.realpath(__file__))
 REQUIRED_LIBS = (
     "libdraw.so",
+    "libinterp.so",
 )
 
 
 def check_libs():
+    """
+    Checks that all required Shared Object files are present.
+    If some are missing, the user will be prompted from stdin
+    to compile them.
+
+    TODO: Pip doesn't remove the .so files when uninstalling
+    because they were not included in the installation.
+    Maybe provide empty .so files in installation?
+    """
     missing = False
     for lib in REQUIRED_LIBS:
         if not os.path.isfile(os.path.join(PARENT, lib)):
