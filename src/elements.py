@@ -17,6 +17,10 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
+"""
+Simple animatable elements that can be applied on scenes.
+"""
+
 import numpy as np
 from typing import Tuple
 from .props import *
@@ -24,19 +28,43 @@ from .lib import draw
 
 
 class Element:
+    """
+    Base element class. All other elements inherit from this.
+    """
     show: BoolProp
 
     def __init__(self) -> None:
+        """
+        All inherited classes should call super().__init__()
+        Sets the "show" prop.
+        """
         self.show = BoolProp(True)
 
     def relevant(self, frame: float) -> bool:
+        """
+        Elements can define their own implementation.
+        Decides whether the element is worth rendering (e.g. color is not transparent)
+        :param frame: The frame in question.
+        """
         return True
 
     def render(self, img: np.ndarray, frame: float) -> None:
-        ...
+        """
+        Elements define their own implementation.
+        Modify the input array in place.
+        :param img: Numpy array image.
+        :param frame: Frame.
+        """
 
 
 class Fill(Element):
+    """
+    Fills the whole scene with one color.
+    Use alpha to control visibility of elements behind it.
+
+    Animatable attributes:
+    * color: The RGBA color to fill.
+    """
     color: VectorProp
 
     def __init__(self, color: Tuple[float, ...] = (0, 0, 0, 255)) -> None:
@@ -58,6 +86,15 @@ class Fill(Element):
 
 
 class Circle(Element):
+    """
+    Draws a circle.
+
+    Animatable attributes:
+    * color: The RGBA color.
+    * center: (X, Y) center location.
+    * radius: Radius of the circle.
+    * border: Border thickness.
+    """
     color: VectorProp
     center: VectorProp
     radius: FloatProp
@@ -84,6 +121,16 @@ class Circle(Element):
 
 
 class Rect(Element):
+    """
+    Draws a rectangle.
+
+    Animatable attributes:
+    * color: The RGBA color.
+    * loc: (X, Y) top left corner location.
+    * size: (width, height) size.
+    * border: Border thickness.
+    * border_radius: Corner rounding radius.
+    """
     color: VectorProp
     loc: VectorProp
     size: VectorProp
