@@ -37,16 +37,18 @@ def check_libs():
     Checks that all required Shared Object files are present.
     If some are missing, the user will be prompted from stdin
     to compile them.
-
-    TODO: Pip doesn't remove the .so files when uninstalling
-    because they were not included in the installation.
-    Maybe provide empty .so files in installation?
     """
     missing = False
     for lib in REQUIRED_LIBS:
-        if not os.path.isfile(os.path.join(PARENT, lib)):
+        path = os.path.join(PARENT, lib)
+        if not os.path.isfile(path):
             print(f"csanim: {lib} missing")
             missing = True
+        else:
+            with open(path, "rb") as file:
+                if len(file.read(10)) < 10:
+                    print(f"csanim: {lib} missing")
+                    missing = True
 
     if missing:
         print("csanim: some libraries missing.")
