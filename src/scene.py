@@ -19,22 +19,27 @@
 
 __all__ = [
     "Scene",
+    "SceneCode",
 ]
 
 import numpy as np
-from typing import List, Tuple
+from typing import List, Tuple, Union
 from .constants import *
 from .transition import transition
-from .elements import Element
+from .elements import *
+
+
+def _empty(resolution: Tuple[int, int]) -> np.ndarray:
+    return np.zeros((*resolution[::-1], 3), dtype=np.uint8)
 
 
 class Scene:
-    length: int
+    length: float   # seconds
     trans_start: int
     trans_len: float
     elements: List[Element]
 
-    def __init__(self, length: int, trans_start: int = T_CUT, trans_len: float = 1.5):
+    def __init__(self, length: float, trans_start: int = T_CUT, trans_len: float = 1.5):
         self.length = length
         self.trans_start = trans_start
         self.trans_len = trans_len
@@ -43,10 +48,69 @@ class Scene:
     def add_element(self, element: Element) -> None:
         self.elements.append(element)
 
-    def render(self, resolution: Tuple[int, int], frame: float) -> np.ndarray:
-        img = np.zeros((*resolution[::-1], 3), dtype=np.uint8)
+    def render(self, resolution: Tuple[int, int], frame: float, fps: int) -> np.ndarray:
+        img = _empty(resolution)
         for element in self.elements:
             if element.show.value(frame) and element.relevant(frame):
                 element.render(img, frame)
         # TODO transition
+        return img
+
+
+class SceneCode(Scene):
+    font: StrProp
+    font_size: IntProp
+    char_width: IntProp
+
+    def __init__(self, font: Union[int, str] = F_CODE, font_size: int = 14, char_width: int = 8,
+            init_text: str = "") -> None:
+        self.font = StrProp(font)
+        self.font_size = IntProp(font_size)
+        self.char_width = IntProp(char_width)
+
+        self._time = 0
+        self._max_time = 0
+        self._text = StrProp("")   # THIS PROP STORES KEYFRAMES IN SECONDS
+        self._cursor = VectorProp(IntProp, 2, (0, 0))   # THIS PROP STORES KEYFRAMES IN SECONDS
+
+        self._text.key(0, init_text)
+
+    @property
+    def length(self):
+        return self._max_time
+
+    def wait(self, time: float) -> float:
+        self._time += time
+        self._max_time = max(self._time, self._max_time)
+        return self._time
+
+    def typewrite(self, text: str, delay: float = 0.5) -> float:
+        for char in text:
+            value = self._text.value(self._time)
+            cursor = self._cursor.value(self._time)
+            cursor[0] += 1
+
+            self._text.key(self._time, value+char)
+            self._cursor.key(self._time, cursor)
+            self._time += delay
+
+        self._max_time = max(self._time, self._max_time)
+        return self._time
+
+    def render(self, resolution: Tuple[int, int], frame: float, fps: int) -> np.ndarray:
+        text = self._text.value(frame/fps)
+        char_width = self.char_width.value(frame)
+        font = self.font.value(frame)
+        font_size = self.font_size.value(frame)
+        cursor = self._cursor.value(frame/fps)
+
+        img = _empty(resolution)
+
+        for i, char in enumerate(text):
+            x = char_width * i
+            draw.text(img, (255, 255, 255), (x, 1), char, font, font_size)
+
+        cursor_x = cursor[0] * char_width
+        draw.rect(img, (255, 255, 255), (cursor_x-1, 0, 2, 20))
+
         return img

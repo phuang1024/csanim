@@ -90,7 +90,7 @@ class VectorProp:
     def __getitem__(self, idx: int) -> Property:
         return self.props[idx]
 
-    def key(self, frame: float, values: Tuple[Any, ...], interp: int = None) -> None:
+    def key(self, frame: float, values: List[Any], interp: int = None) -> None:
         if interp is None:
             interp = self.type.default_interp
         for i in range(self.length):

@@ -59,12 +59,12 @@ class Video:
 
         frame = 0
         for scene in self.scenes:
-            for f in range(scene.length):
+            for f in range(int(scene.length*self.fps)):
                 sys.stdout.write("\r"+" "*80+"\r")
                 sys.stdout.write(f"Rendering frame {frame}")
                 sys.stdout.flush()
 
-                img = scene.render(self.resolution, f)
+                img = scene.render(self.resolution, f, self.fps)
                 fpath = os.path.join(dir_path, f"{frame}.jpg")
                 cv2.imwrite(fpath, img)
                 frame += 1
