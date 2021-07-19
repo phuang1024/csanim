@@ -120,6 +120,23 @@ class StrProp(Property):
     default_interp = I_CONST
 
 
+def closest_ind(keyframes: List[Keyframe], frame: float) -> int:
+    imin = 0
+    imax = len(keyframes) - 1
+
+    while True:
+        if imax-imin == 1:
+            if keyframes[imax].frame <= frame:
+                return imax
+            return imin
+
+        mid = (imax+imin) // 2
+        if keyframes[mid].frame > frame:
+            imax = mid
+        else:
+            imin = mid
+
+
 def interpolate(keyframes: List[Keyframe], frame: float, default: Any) -> Any:
     if len(keyframes) == 0:
         return default
@@ -133,14 +150,7 @@ def interpolate(keyframes: List[Keyframe], frame: float, default: Any) -> Any:
         elif frame >= keyframes[-1].frame:
             return keyframes[-1].value
         else:
-            ind = 0
-            for i in range(len(keyframes)):
-                if keyframes[i].frame == frame:
-                    return keyframes[i].value
-                if keyframes[i].frame > frame:
-                    ind = i - 1
-                    break
-
+            ind = closest_ind(keyframes, frame)
             f1 = keyframes[ind].frame
             f2 = keyframes[ind+1].frame
             v1 = keyframes[ind].value

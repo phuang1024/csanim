@@ -58,6 +58,7 @@ class Video:
         os.makedirs(dir_path, exist_ok=True)
 
         frame = 0
+        start = time.time()
         for scene in self.scenes:
             for f in range(int(scene.length*self.fps)):
                 sys.stdout.write("\r"+" "*80+"\r")
@@ -68,6 +69,8 @@ class Video:
                 fpath = os.path.join(dir_path, f"{frame}.jpg")
                 cv2.imwrite(fpath, img)
                 frame += 1
+        elapse = time.time() - start
+        print(f"Finished rendering {frame} frames in {elapse} seconds.")
 
         args = [FFMPEG, "-y", "-i", os.path.join(dir_path, "%d.jpg"), "-c:v", vencode, "-r", str(self.fps), path]
         proc = subprocess.Popen(args, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
