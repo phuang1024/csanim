@@ -37,6 +37,11 @@ if os.path.isdir(DEST):
     else:
         exit()
 shutil.copytree(SRC, DEST)
+for file in os.listdir(DEST):
+    if file.endswith(".so"):
+        abspath = os.path.join(DEST, file)
+        with open(abspath, "w"):
+            pass
 
 setuptools.setup(
     name="csanim",

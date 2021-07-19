@@ -18,5 +18,6 @@ jobs:
           TWINE_PASSWORD: ${{ secrets.PYPI_PWD }}
           PYPI_VERSION: ${{ github.ref }}
         run: |
+          make
           make wheel
           make upload

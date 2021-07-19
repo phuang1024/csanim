@@ -1,3 +1,4 @@
 include csanim/fonts/*
 include csanim/*.cpp
+include csanim/*.so
 include csanim/Makefile
