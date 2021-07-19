@@ -8,3 +8,7 @@ __pycache__
 /*_imgs
 /*.mp4
 /test.py
+
+/docs/_build
+/docs/_static
+/docs/_templates
