@@ -56,7 +56,7 @@ def check_libs():
             print("csanim: not compiling because CSANIM_NO_COMPILE env variable is present")
             return False
         else:
-            if input("csanim: compile libraries? [y/N] ").lower().strip() == "y":
+            if "CSANIM_COMPILE" in os.environ or input("csanim: compile libraries? [y/N] ").lower().strip() == "y":
                 print(f"csanim: running \"make\" in {PARENT}")
                 p = subprocess.Popen(["make"], cwd=PARENT)
                 p.wait()

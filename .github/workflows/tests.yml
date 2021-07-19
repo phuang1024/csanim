@@ -33,6 +33,8 @@ jobs:
       - name: Install packages
         run: pip install sphinx sphinx-rtd-theme csanim
       - name: Build docs
+        env:
+          CSANIM_COMPILE: asdf
         run: |
           cd ./docs
           mkdir ./_static ./_templates
