@@ -17,6 +17,12 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
+"""
+Scenes. A scene is a section of a video.
+The base scene exists (just a collection of elements).
+More complex scenes also exist.
+"""
+
 __all__ = [
     "Scene",
     "SceneCode",
@@ -34,21 +40,42 @@ def _empty(resolution: Tuple[int, int]) -> np.ndarray:
 
 
 class Scene:
+    """
+    Base scene.
+    When defining your own scene, inherit from this.
+    """
     length: float   # seconds
     trans_start: int
     trans_len: float
     elements: List[Element]
 
     def __init__(self, length: float, trans_start: int = T_CUT, trans_len: float = 1.5):
+        """
+        Initializes scene.
+        :param length: Length IN SECONDS
+        TODO transitions not implemented yet
+        """
         self.length = length
         self.trans_start = trans_start
         self.trans_len = trans_len
         self.elements = []
 
     def add_element(self, element: Element) -> None:
+        """
+        Appends an element to the internal list.
+        This element will go above any previous elements.
+        """
         self.elements.append(element)
 
     def render(self, resolution: Tuple[int, int], frame: float, fps: int) -> np.ndarray:
+        """
+        Renders an image. Define your own implementation if you are inheriting.
+        Return a numpy array image.
+        Make sure the array's shape is (H, W).
+        :param resolution: (X, Y) resolution.
+        :param frame: Frame.
+        :param fps: FPS.
+        """
         img = _empty(resolution)
         for element in self.elements:
             if element.show.value(frame) and element.relevant(frame):
@@ -58,6 +85,11 @@ class Scene:
 
 
 class SceneCode(Scene):
+    """
+    A scene with code text.
+    Simple interface: typewrite() writes the text, etc.
+    Still in development.
+    """
     font: StrProp
     font_size: IntProp
     char_width: IntProp
