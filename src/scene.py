@@ -84,7 +84,7 @@ class SceneCode(Scene):
         self._max_time = max(self._time, self._max_time)
         return self._time
 
-    def typewrite(self, text: str, delay: float = 0.5) -> float:
+    def typewrite(self, text: str, delay: float = 0.08) -> float:
         for char in text:
             self._time += delay
 

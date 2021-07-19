@@ -71,7 +71,8 @@ class Video:
                 frame += 1
         logger.finish(f"Finished rendering {total} in $TIME")
 
-        args = [FFMPEG, "-y", "-i", os.path.join(dir_path, "%d.jpg"), "-c:v", vencode, "-r", str(self.fps), path]
+        args = [FFMPEG, "-y", "-i", os.path.join(dir_path, "%d.jpg"), "-vframes", str(total-1),
+            "-c:v", vencode, "-r", str(self.fps), path]
         proc = Popen(args, stdin=DEVNULL, stdout=PIPE, stderr=STDOUT)
 
         chars = loading()
