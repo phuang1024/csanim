@@ -19,10 +19,10 @@
 
 import sys
 import os
-import subprocess
 import time
 import cv2
-from typing import List, Tuple
+from typing import IO, List, Tuple
+from subprocess import Popen, PIPE, DEVNULL, STDOUT
 from .scene import Scene
 from .utils import ProgressLogger, loading
 
@@ -72,7 +72,7 @@ class Video:
         logger.finish(f"Finished rendering {total} in $TIME")
 
         args = [FFMPEG, "-y", "-i", os.path.join(dir_path, "%d.jpg"), "-c:v", vencode, "-r", str(self.fps), path]
-        proc = subprocess.Popen(args, stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        proc = Popen(args, stdin=DEVNULL, stdout=PIPE, stderr=STDOUT)
 
         chars = loading()
         while proc.poll() is None:
@@ -86,3 +86,9 @@ class Video:
             print(f"Finished exporting {total} frames.")
         else:
             print(f"Video compilation failed. Rendered images are in {dir_path}.")
+            if not input("Show FFmpeg output? [Y/n] ").lower().strip() == "n":
+                while True:
+                    data = proc.stdout.read(8192)
+                    sys.stdout.buffer.write(data)
+                    if len(data) < 8192:
+                        break
