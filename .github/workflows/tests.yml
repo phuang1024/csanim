@@ -31,7 +31,14 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install packages
-        run: pip install sphinx sphinx-rtd-theme csanim
+        run: pip install sphinx sphinx-rtd-theme
+      - name: Install csanim
+        env:
+          PYPI_VERSION: 0.0.1
+        run: |
+          make wheel
+          cd ./build/dist
+          pip install csanim-0.0.1-py3-none-any.whl
       - name: Build docs
         env:
           CSANIM_COMPILE: asdf
