@@ -45,6 +45,7 @@ class Video:
     def __init__(self, fps: int, resolution: Tuple[int, int]) -> None:
         """
         Initializes video.
+
         :param fps: Frames per second of video.
         :param resolution: (x, y) pixel resolution.
         """
@@ -64,6 +65,7 @@ class Video:
         Exports video to a video file.
         Will first render separate images to a tmp folder in the same directory.
         Requires FFmpeg to put images into video.
+
         :param path: Output video file path.
         :param vencode: Video encoding. H.265 may not be supported, so you can try libx264
         """

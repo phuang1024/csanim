@@ -51,6 +51,7 @@ class Element:
         """
         Elements can define their own implementation.
         Decides whether the element is worth rendering (e.g. color is not transparent)
+
         :param frame: The frame in question.
         """
         return True
@@ -59,6 +60,7 @@ class Element:
         """
         Elements define their own implementation.
         Modify the input array in place.
+
         :param img: Numpy array image.
         :param frame: Frame.
         """

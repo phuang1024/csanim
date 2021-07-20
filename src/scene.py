@@ -54,6 +54,7 @@ class Scene:
     def __init__(self, length: float, trans_start: int = T_CUT, trans_len: float = 1.5):
         """
         Initializes scene.
+
         :param length: Length IN SECONDS
         TODO transitions not implemented yet
         """
@@ -74,6 +75,7 @@ class Scene:
         Renders an image. Define your own implementation if you are inheriting.
         Return a numpy array image.
         Make sure the array's shape is (H, W).
+
         :param resolution: (X, Y) resolution.
         :param frame: Frame.
         :param fps: FPS.

@@ -46,6 +46,7 @@ def fadeio(img1, img2, fac):
 def transition(img1: np.ndarray, img2: np.ndarray, fac: float, mode: int) -> np.ndarray:
     """
     Transitions two images.
+
     :param img1: Image 1
     :param img2: Image 2
     :param fac: Factor of transition. -1 = full img1, 1 = full img2

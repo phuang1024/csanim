@@ -57,6 +57,7 @@ class draw:
             radius: float, border: float = 0):
         """
         Draws a circle.
+
         :param img: Image.
         :param color: RGB or RGBA color.
         :param center: (X, Y) center.
@@ -73,6 +74,7 @@ class draw:
             bl_rad: float = -1, br_rad: float = -1) -> None:
         """
         Draws a rectangle.
+
         :param img: Image.
         :param color: RGB or RGBA color.
         :param dims: (X, Y, W, H) dimensions.
@@ -92,6 +94,7 @@ class draw:
             font: Union[int, str], font_size: int) -> None:
         """
         Draws text.
+
         :param img: Image.
         :param color: RGB or RGBA color.
         :param loc: (X, Y) location of top left corner.

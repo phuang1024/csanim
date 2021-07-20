@@ -76,6 +76,7 @@ class Property:
     def __init__(self, default: Any) -> None:
         """
         Initializes the property.
+
         :param default: The default value (returned if no keyframes are present).
         """
         self.keyframes = []
@@ -110,6 +111,7 @@ class VectorProp:
     def __init__(self, type: Type[Property], length: int, defaults: Tuple[Any, ...]) -> None:
         """
         Initializes the property.
+
         :param type: The prop type. e.g. BoolProp, IntProp, ...
         :param length: Vector length.
         :param defaults: Default values of all the props. len(defaults) == length
@@ -131,6 +133,7 @@ class VectorProp:
         """
         Adds keyframe to all props.
         To add a keyframe to one prop, do vecprop[i].key()
+
         :param frame: Frame.
         :param values: Values. len(values) == length
         :param interp: Interpolation for all the props.
