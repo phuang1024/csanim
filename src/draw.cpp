@@ -37,6 +37,7 @@ typedef  const double   CD;
 void set(UCH* img, const UINT width, const UINT x, const UINT y, const UCH channel, const UCH value) {
     /*
     Sets pixel and channel of image to a value.
+
     :param img: Image.
     :param width: Image width.
     :param x: X coordinate.
@@ -50,6 +51,7 @@ void set(UCH* img, const UINT width, const UINT x, const UINT y, const UCH chann
 void setc(UCH* img, const UINT width, const UINT x, const UINT y, const UCH r, const UCH g, const UCH b) {
     /*
     Sets pixel to color. Equivalent to three calls of set()
+
     :param img: Image.
     :param width: Image width.
     :param x: X coordinate.
@@ -64,6 +66,7 @@ void setc(UCH* img, const UINT width, const UINT x, const UINT y, const UCH r, c
 void get(UCH* img, const UINT width, const UINT x, const UINT y, const UCH channel, UCH* value) {
     /*
     Gets value at pixel and channel and modifies "value" param.
+
     :param img: Image.
     :param width: Image width.
     :param x: X coordinate.
@@ -77,6 +80,7 @@ void get(UCH* img, const UINT width, const UINT x, const UINT y, const UCH chann
 void getc(UCH* img, const UINT width, const UINT x, const UINT y, UCH* color) {
     /*
     Gets value at pixel and modifies "value" param. Equivalent to 3 calls of get()
+
     :param img: Image.
     :param width: Image width.
     :param x: X coordinate.
@@ -92,6 +96,7 @@ void getc(UCH* img, const UINT width, const UINT x, const UINT y, UCH* color) {
 void mix(UCH* dest, const UCH* c1, const UCH* c2, CD fac) {
     /*
     Mixes two colors with a factor.
+
     :param dest: Destination array. Will be modified.
     :param c1: Color 1.
     :param c2: Color 2.
@@ -104,6 +109,7 @@ void mix(UCH* dest, const UCH* c1, const UCH* c2, CD fac) {
 double pythag(CD dx, CD dy) {
     /*
     Pythagorean distance.
+
     :param dx: X delta.
     :param dy: Y delta.
     */
@@ -113,6 +119,7 @@ double pythag(CD dx, CD dy) {
 int ibounds(const int v, const int vmin = 0, const int vmax = 1) {
     /*
     Integer bounds.
+
     :param v: Value.
     :param vmin: Minimum value.
     :param vmax: Maximum value.
@@ -123,6 +130,7 @@ int ibounds(const int v, const int vmin = 0, const int vmax = 1) {
 double dbounds(CD v, CD vmin = 0, CD vmax = 1) {
     /*
     Double bounds.
+
     :param v: Value.
     :param vmin: Minimum value.
     :param vmax: Maximum value.
@@ -135,6 +143,7 @@ extern "C" void circle(UCH* img, const UINT width, const UINT height, CD cx, CD 
         CD rad, CD border, CD r, CD g, CD b, CD a) {
     /*
     Draws a circle.
+
     :param img: Image.
     :param width: Image width.
     :param height: Image height.
@@ -172,6 +181,7 @@ extern "C" void rect(UCH* img, const UINT width, const UINT height, CD dx, CD dy
         CD border, CD border_rad, CD tl_rad, CD tr_rad, CD bl_rad, CD br_rad, CD r, CD g, CD b, CD a) {
     /*
     Draws a rectangle.
+
     :param img: Image.
     :param width: Image width.
     :param height: Image height.
