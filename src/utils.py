@@ -22,8 +22,18 @@ Utilities for internal use.
 """
 
 import sys
+import os
 import shutil
 import time
+import ctypes
+
+PARENT = os.path.dirname(os.path.realpath(__file__))
+FONTS = os.path.join(PARENT, "fonts")
+ROBOTO = os.path.join(FONTS, "roboto_mono.ttf")
+
+AR_FLAGS = "aligned, c_contiguous"
+UINT = ctypes.c_uint32
+DOUB = ctypes.c_double
 
 
 class ProgressLogger:
