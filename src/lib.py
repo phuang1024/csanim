@@ -27,7 +27,7 @@ import numpy as np
 from typing import Tuple, Union
 from numpy import ctypeslib as ctl
 from PIL import Image, ImageFont, ImageDraw
-from .constants import *
+from constants import *
 
 PARENT = os.path.dirname(os.path.realpath(__file__))
 FONTS = os.path.join(PARENT, "fonts")
@@ -43,6 +43,10 @@ class draw:
     Namespace for graphical drawing functions.
     """
     lib = ctypes.CDLL(os.path.join(PARENT, "libdraw.so"))
+    lib.line.argtypes = [
+        ctl.ndpointer(dtype=np.uint8, ndim=3, flags=AR_FLAGS),
+        UINT, UINT, *[DOUB for _ in range(9)]
+    ]
     lib.circle.argtypes = [
         ctl.ndpointer(dtype=np.uint8, ndim=3, flags=AR_FLAGS),
         UINT, UINT, *[DOUB for _ in range(8)]
@@ -51,6 +55,22 @@ class draw:
         ctl.ndpointer(dtype=np.uint8, ndim=3, flags=AR_FLAGS),
         UINT, UINT, *[DOUB for _ in range(14)]
     ]
+
+    @staticmethod
+    def line(img: np.ndarray, color: Tuple[float, ...], p1: Tuple[float, float], p2: Tuple[float, float],
+            thickness: float = 1) -> None:
+        """
+        Draws a line.
+
+        :param img: Image.
+        :param color: RGB or RGBA color.
+        :param p1: (X, Y) of point 1.
+        :param p2: (X, Y) of point 2.
+        :param thickness: Line thickness.
+        """
+        assert img.dtype == np.uint8
+        color = (*color, 255) if len(color) == 3 else color
+        draw.lib.line(img, img.shape[1], img.shape[0], *p1, *p2, thickness, *color)
 
     @staticmethod
     def circle(img: np.ndarray, color: Tuple[float, ...], center: Tuple[float, float],

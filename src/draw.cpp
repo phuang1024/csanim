@@ -139,6 +139,45 @@ double dbounds(CD v, CD vmin = 0, CD vmax = 1) {
 }
 
 
+extern "C" void line(UCH* img, const UINT width, const UINT height, CD x1, CD y1, CD x2, CD y2,
+        CD thick, CD r, CD g, CD b, CD a) {
+    /*
+    Draws a line.
+
+    :param img: Image.
+    :param width: Image width.
+    :param height: Image height.
+    :param x1, x2, y1, y2: Line points.
+    :param thick: Line thickness.
+    :param r, g, b, a: R, G, B, A values.
+    */
+    // TODO the line still appears bumpy
+    const int xmin = max((int)(min(x1, x2)-thick-1), 0);
+    const int xmax = min((int)(max(x1, x2)+thick+1), (int)width-1);
+    const int ymin = max((int)(min(y1, y2)-thick-1), 0);
+    const int ymax = min((int)(max(y1, y2)+thick+1), (int)height-1);
+
+    CD dx = abs(x1-x2), dy = abs(y1-y2);
+    CD m = (dy == 0) ? 1e9 : dx/dy;
+    CD y_int = y1 - m*x1;
+    CD A = -m, B = 1, C = -y_int;
+
+    CD afac = a / 255;
+    const UCH c1[3] = {(UCH)r, (UCH)g, (UCH)b};
+
+    for (int x = xmin; x <= xmax; x++) {
+        for (int y = ymin; y <= ymax; y++) {
+            CD dist = abs(A*x + B*y + C) / pythag(A, B);
+            CD fac = dbounds(thick-dist+1);
+
+            UCH c2[3], color[3];
+            getc(img, width, x, y, c2);
+            mix(color, c2, c1, fac*afac);
+            setc(img, width, x, y, color[0], color[1], color[2]);
+        }
+    }
+}
+
 extern "C" void circle(UCH* img, const UINT width, const UINT height, CD cx, CD cy,
         CD rad, CD border, CD r, CD g, CD b, CD a) {
     /*
