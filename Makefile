@@ -25,6 +25,10 @@ cpp:
 	cd ./src; \
 	make;
 
+install:
+	cd ./build/dist; \
+	pip install ./csanim-$(PYPI_VERSION)-py3-none-any.whl
+
 wheel:
 	cd ./build; \
 	$(PY) ./setup.py $(WHEEL_FLAGS);

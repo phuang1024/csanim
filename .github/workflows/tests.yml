@@ -34,11 +34,10 @@ jobs:
         run: pip install sphinx sphinx-rtd-theme
       - name: Install csanim
         env:
-          PYPI_VERSION: 0.0.1
+          PYPI_VERSION: "0.0.1"
         run: |
           make wheel
-          cd ./build/dist
-          pip install csanim-0.0.1-py3-none-any.whl
+          make install
       - name: Build docs
         env:
           CSANIM_COMPILE: asdf
