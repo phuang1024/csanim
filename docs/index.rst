@@ -10,5 +10,6 @@ A library for creating computer science videos.
    install
    props
    elements
+   draw
    scene
    video

@@ -25,9 +25,13 @@ cpp:
 	cd ./src; \
 	make;
 
+doc:
+	cd ./docs; \
+	make html;
+
 install:
 	cd ./build/dist; \
-	pip install ./csanim-$(PYPI_VERSION)-py3-none-any.whl
+	pip install ./csanim-$(PYPI_VERSION)-py3-none-any.whl --force-reinstall;
 
 wheel:
 	cd ./build; \
