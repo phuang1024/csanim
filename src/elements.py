@@ -37,20 +37,34 @@ from .lib import draw
 class Element:
     """
     Base element class. All other elements inherit from this.
+
+    There will be a ``show`` BoolProp.
+    When set to False in a frame, the element will not be rendered.
+
+    Inherit and define:
+
+    * ``relevant()``
+    * ``render()``
+
+    The docstrings of inherited elements should define a list of
+    animatable properties and what they do.
     """
     show: BoolProp
 
     def __init__(self) -> None:
         """
-        All inherited classes should call super().__init__()
-        Sets the "show" prop.
+        All inherited classes must call ``super().__init__()``
+
+        Sets the ``show`` BoolProp.
         """
         self.show = BoolProp(True)
 
     def relevant(self, frame: float) -> bool:
         """
-        Elements can define their own implementation.
+        Elements may define their own implementation.
         Decides whether the element is worth rendering (e.g. color is not transparent)
+
+        The default implementation always returns True.
 
         :param frame: The frame in question.
         """
@@ -58,8 +72,10 @@ class Element:
 
     def render(self, img: np.ndarray, frame: float) -> None:
         """
-        Elements define their own implementation.
+        Elements may define their own implementation.
         Modify the input array in place.
+
+        The default implementation does nothing.
 
         :param img: Numpy array image.
         :param frame: Frame.
@@ -72,7 +88,8 @@ class Fill(Element):
     Use alpha to control visibility of elements behind it.
 
     Animatable attributes:
-    * color: The RGBA color to fill.
+
+    * ``color``: The RGBA color to fill.
     """
     color: VectorProp
 
@@ -99,10 +116,11 @@ class Circle(Element):
     Draws a circle.
 
     Animatable attributes:
-    * color: The RGBA color.
-    * center: (X, Y) center location.
-    * radius: Radius of the circle.
-    * border: Border thickness.
+
+    * ``color``: The RGBA color.
+    * ``center``: (X, Y) center location.
+    * ``radius``: Radius of the circle.
+    * ``border``: Border thickness.
     """
     color: VectorProp
     center: VectorProp
@@ -134,11 +152,12 @@ class Rect(Element):
     Draws a rectangle.
 
     Animatable attributes:
-    * color: The RGBA color.
-    * loc: (X, Y) top left corner location.
-    * size: (width, height) size.
-    * border: Border thickness.
-    * border_radius: Corner rounding radius.
+
+    * ``color``: The RGBA color.
+    * ``loc``: (X, Y) top left corner location.
+    * ``size``: (width, height) size.
+    * ``border``: Border thickness.
+    * ``border_radius``: Corner rounding radius.
     """
     color: VectorProp
     loc: VectorProp

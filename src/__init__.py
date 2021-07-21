@@ -22,6 +22,8 @@ A library for creating computer science explanatory videos.
 Official GitHub: https://github.com/phuang1024/csanim
 """
 
+__version__ = "0.0.5"
+
 import os
 import subprocess
 
@@ -37,6 +39,14 @@ def check_libs():
     Checks that all required Shared Object files are present.
     If some are missing, the user will be prompted from stdin
     to compile them.
+
+    If the compilation fails (either error or user says no),
+    the module will be empty (no useful attributes).
+
+    Environment variables (set to any value):
+
+    * CSANIM_COMPILE: If missing, compile without asking.
+    * CSANIM_NO_COMPILE: Never compile if missing.
     """
     missing = False
     for lib in REQUIRED_LIBS:
@@ -82,8 +92,14 @@ def check_libs():
 if check_libs():
     from .constants import *
     from .elements import *
+    from .lib import draw
     from . import props
     from .scene import *
     from .video import Video
 else:
     print("csanim: module empty because libraries missing")
+
+del os
+del subprocess
+del PARENT
+del check_libs

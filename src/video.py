@@ -24,13 +24,15 @@ The video class.
 import sys
 import os
 import time
+import shutil
 import cv2
-from typing import IO, List, Tuple
+from typing import List, Tuple
 from subprocess import Popen, PIPE, DEVNULL, STDOUT
 from .scene import Scene
 from .utils import ProgressLogger, loading
 
-FFMPEG = "/usr/bin/ffmpeg"
+FFMPEG = shutil.which("ffmpeg")
+assert FFMPEG is not None and os.path.isfile(FFMPEG), "FFmpeg not found."
 
 
 class Video:
@@ -111,3 +113,4 @@ class Video:
                     sys.stdout.buffer.write(data)
                     if len(data) < 8192:
                         break
+                sys.stdout.buffer.flush()

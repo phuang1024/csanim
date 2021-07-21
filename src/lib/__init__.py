@@ -17,5 +17,9 @@
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
+"""
+Handles Shared Object library loading and calling.
+"""
+
 from . import draw
 from . import interp

@@ -26,6 +26,8 @@ More complex scenes also exist.
 __all__ = [
     "Scene",
     "SceneCode",
+
+    "empty",
 ]
 
 import numpy as np
@@ -37,7 +39,11 @@ from .props import *
 from .transition import transition
 
 
-def _empty(resolution: Tuple[int, int]) -> np.ndarray:
+def empty(resolution: Tuple[int, int]) -> np.ndarray:
+    """
+    Generates empty numpy array with the given dimensions.
+    Reverse resolution because cv2 uses (height, width) shape.
+    """
     return np.zeros((*resolution[::-1], 3), dtype=np.uint8)
 
 
@@ -54,9 +60,9 @@ class Scene:
     def __init__(self, length: float, trans_start: int = T_CUT, trans_len: float = 1.5):
         """
         Initializes scene.
+        TODO transitions not implemented yet
 
         :param length: Length IN SECONDS
-        TODO transitions not implemented yet
         """
         self.length = length
         self.trans_start = trans_start
@@ -66,7 +72,7 @@ class Scene:
     def add_element(self, element: Element) -> None:
         """
         Appends an element to the internal list.
-        This element will go above any previous elements.
+        This element will go above (cover) any previous elements during rendering.
         """
         self.elements.append(element)
 
@@ -74,13 +80,18 @@ class Scene:
         """
         Renders an image. Define your own implementation if you are inheriting.
         Return a numpy array image.
+
         Make sure the array's shape is (H, W).
+        You can use ``csanim.empty(resolution)`` for an empty image with the correct
+        dimensions.
+
+        Use the ``csanim.draw`` module for graphical drawing.
 
         :param resolution: (X, Y) resolution.
         :param frame: Frame.
         :param fps: FPS.
         """
-        img = _empty(resolution)
+        img = empty(resolution)
         for element in self.elements:
             if element.show.value(frame) and element.relevant(frame):
                 element.render(img, frame)
@@ -143,7 +154,7 @@ class SceneCode(Scene):
         font_size = self.font_size.value(frame)
         cursor = self._cursor.value(frame/fps)
 
-        img = _empty(resolution)
+        img = empty(resolution)
 
         for i, char in enumerate(text):
             x = char_width * i

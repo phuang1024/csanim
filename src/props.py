@@ -40,9 +40,10 @@ INTERPS = {
 class Keyframe:
     """
     A keyframe class which contains three values:
-    * frame: The frame.
-    * value: The value. Can be any type.
-    * interp: The interpolation of this keyframe and the next.
+
+    * ``frame``: The frame.
+    * ``value``: The value. Can be any type.
+    * ``interp``: The interpolation of this keyframe and the next.
     """
     frame: float
     value: Any
@@ -62,9 +63,10 @@ class Property:
     Base property class. All other props extend from this.
 
     Inherit and define:
-    * type: The property type.
-    * supported_interps: Supported interpolations. "ALL" = all supported.
-    * default_interp: Default interpolation to use.
+
+    * ``type``: The property type.
+    * ``supported_interps``: Supported interpolations. ``"ALL"`` = all supported.
+    * ``default_interp``: Default interpolation to use.
     """
     type: Type
     supported_interps: Tuple[int]
@@ -114,7 +116,7 @@ class VectorProp:
 
         :param type: The prop type. e.g. BoolProp, IntProp, ...
         :param length: Vector length.
-        :param defaults: Default values of all the props. len(defaults) == length
+        :param defaults: Default values of all the props. ``len(defaults) == length``
         """
         assert length >= 0
         assert len(defaults) == length
@@ -132,10 +134,10 @@ class VectorProp:
     def key(self, frame: float, values: List[Any], interp: int = None) -> None:
         """
         Adds keyframe to all props.
-        To add a keyframe to one prop, do vecprop[i].key()
+        To add a keyframe to one prop, do ``vecprop[i].key()``
 
         :param frame: Frame.
-        :param values: Values. len(values) == length
+        :param values: Values. ``len(values) == length``
         :param interp: Interpolation for all the props.
         """
         assert len(values) == self.length
