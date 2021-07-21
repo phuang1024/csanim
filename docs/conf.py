@@ -17,12 +17,15 @@
 import os
 from subprocess import Popen, DEVNULL
 
+os.environ["CSANIM_COMPILE"] = "y"
+os.environ["CSANIM_QUIET"] = "y"
 try:
     import csanim
 except ModuleNotFoundError:
     cwd = os.path.dirname(os.path.dirname(__file__))
-    Popen(["make", "wheel"], cwd=cwd, stdin=DEVNULL, stdout=DEVNULL, stderr=DEVNULL)
-    Popen(["make", "install"], cwd=cwd, stdin=DEVNULL, stdout=DEVNULL, stderr=DEVNULL)
+    Popen(["make", "wheel"], cwd=cwd, stdin=DEVNULL, stdout=DEVNULL, stderr=DEVNULL).wait()
+    Popen(["make", "install"], cwd=cwd, stdin=DEVNULL, stdout=DEVNULL, stderr=DEVNULL).wait()
+    import csanim
 
 # -- Project information -----------------------------------------------------
 
