@@ -16,6 +16,9 @@ jobs:
       - name: Compilation
         run: make
       - name: Import
+        env:
+          CSANIM_COMPILE: "y"
+          CSANIM_IGNORE_FFMPEG: "y"
         run: python -c "import src"
 
   formatting:
