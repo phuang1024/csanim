@@ -13,3 +13,41 @@
 A tool for creating computer science explanatory videos.
 
 Inspired by 3Blue1Brown.
+
+[Documentation][docs]
+
+## Installation
+
+Please see the [docs page][install].
+
+## Building
+
+### Module
+
+``` bash
+# First, build the C++ sources.
+make cpp
+
+# Next, build the wheel file.
+make wheel
+
+# Last (optional), install the wheel file.
+make install
+```
+
+### Docs
+
+``` bash
+# The documentation uses sphinx autodoc, which depends
+# on the module. Follow above instructions to build and
+# install the module first.
+
+# Build docs with sphinx
+make doc
+
+# Open in a browser
+firefox ./docs/_build/html/index.html
+```
+
+[docs]: https://csanim.rtfd.io
+[install]: https://csanim.rtfd.io/en/latest/install.html
