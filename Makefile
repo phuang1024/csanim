@@ -24,7 +24,7 @@ WHEEL_FLAGS = bdist_wheel sdist
 
 
 cpp:
-	cd ./src; \
+	cd ./csanim; \
 	make;
 
 docs:

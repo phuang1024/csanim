@@ -19,7 +19,7 @@ jobs:
         env:
           CSANIM_COMPILE: "y"
           CSANIM_IGNORE_FFMPEG: "y"
-        run: python -c "import src"
+        run: python -c "import csanim"
 
   formatting:
     runs-on: ubuntu-latest

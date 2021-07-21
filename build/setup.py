@@ -23,7 +23,7 @@ import setuptools
 
 PARENT = os.path.dirname(os.path.realpath(__file__))
 DEST = os.path.join(PARENT, "csanim")
-SRC = os.path.join(os.path.dirname(PARENT), "src")
+SRC = os.path.join(os.path.dirname(PARENT), "csanim")
 
 with open("../README.md", "r") as file:
     long_description = file.read()

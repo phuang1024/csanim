@@ -30,7 +30,7 @@ PATHS = (
     ("./build",   False, ("*.py",)),
     # ("./docs",    False, ("*.rst",)),
     # ("./scripts", True,  ("*.py",)),
-    ("./src",     True,  ("*.py", "*.cpp", "Makefile")),
+    ("./csanim",     True,  ("*.py", "*.cpp", "Makefile")),
     ("./tests",   True,  ("*.py",)),
 )
 
