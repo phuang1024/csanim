@@ -10,11 +10,19 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-import os
-import sys
-sys.path.insert(0, os.path.abspath('..'))
-import src as csanim
+# import os
+# import sys
+# sys.path.insert(0, os.path.abspath('.'))
 
+import os
+from subprocess import Popen, DEVNULL
+
+try:
+    import csanim
+except ModuleNotFoundError:
+    cwd = os.path.dirname(os.path.dirname(__file__))
+    Popen(["make", "wheel"], cwd=cwd, stdin=DEVNULL, stdout=DEVNULL, stderr=DEVNULL)
+    Popen(["make", "install"], cwd=cwd, stdin=DEVNULL, stdout=DEVNULL, stderr=DEVNULL)
 
 # -- Project information -----------------------------------------------------
 
