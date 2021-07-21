@@ -20,6 +20,13 @@
 """
 A library for creating computer science explanatory videos.
 Official GitHub: https://github.com/phuang1024/csanim
+
+Available environment variables:
+
+* ``CSANIM_QUIET``: Don't print info about missing libs to stdout.
+* ``CSANIM_COMPILE``: If libs missing, compile without asking.
+* ``CSANIM_NO_COMPILE``: Never compile libs if missing.
+* ``CSANIM_IGNORE_FFMPEG``: Don't raise error if FFmpeg missing.
 """
 
 __version__ = "0.0.5"
@@ -34,6 +41,11 @@ REQUIRED_LIBS = (
 )
 
 
+def verbose(msg):
+    if "CSANIM_QUIET" not in os.environ:
+        print(msg)
+
+
 def check_libs():
     """
     Checks that all required Shared Object files are present.
@@ -43,27 +55,24 @@ def check_libs():
     If the compilation fails (either error or user says no),
     the module will be empty (no useful attributes).
 
-    Environment variables (set to any value):
-
-    * CSANIM_COMPILE: If missing, compile without asking.
-    * CSANIM_NO_COMPILE: Never compile if missing.
+    Environment variables: CSANIM_COMPILE, CSANIM_NO_COMPILE
     """
     missing = False
     for lib in REQUIRED_LIBS:
         path = os.path.join(PARENT, lib)
         if not os.path.isfile(path):
-            print(f"csanim: {lib} missing")
+            verbose(f"csanim: {lib} missing")
             missing = True
         else:
             with open(path, "rb") as file:
                 if len(file.read(10)) < 10:
-                    print(f"csanim: {lib} missing")
+                    verbose(f"csanim: {lib} missing")
                     missing = True
 
     if missing:
-        print("csanim: some libraries missing.")
+        verbose("csanim: some libraries missing.")
         if "CSANIM_NO_COMPILE" in os.environ:
-            print("csanim: not compiling because CSANIM_NO_COMPILE env variable is present")
+            verbose("csanim: not compiling because CSANIM_NO_COMPILE env variable is present")
             return False
         else:
             env = "CSANIM_COMPILE" in os.environ
@@ -74,14 +83,14 @@ def check_libs():
                 except EOFError:
                     inp = False
             if env or inp:
-                print(f"csanim: running \"make\" in {PARENT}")
+                verbose(f"csanim: running \"make\" in {PARENT}")
                 p = subprocess.Popen(["make"], cwd=PARENT)
                 p.wait()
                 if p.returncode == 0:
-                    print(f"csanim: compilation successful")
+                    verbose(f"csanim: compilation successful")
                     return True
                 else:
-                    print(f"csanim: compilation failed")
+                    verbose(f"csanim: compilation failed")
                     return False
             else:
                 return False
@@ -97,7 +106,7 @@ if check_libs():
     from .scene import *
     from .video import Video
 else:
-    print("csanim: module empty because libraries missing")
+    verbose("csanim: module empty because libraries missing")
 
 del os
 del subprocess

@@ -40,7 +40,9 @@ jobs:
           make install
       - name: Build docs
         env:
-          CSANIM_COMPILE: asdf
+          CSANIM_QUIET: "y"
+          CSANIM_COMPILE: "y"
+          CSANIM_IGNORE_FFMPEG: "y"
         run: |
           cd ./docs
           mkdir ./_static ./_templates

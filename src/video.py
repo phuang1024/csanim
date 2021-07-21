@@ -32,7 +32,8 @@ from .scene import Scene
 from .utils import ProgressLogger, loading
 
 FFMPEG = shutil.which("ffmpeg")
-assert FFMPEG is not None and os.path.isfile(FFMPEG), "FFmpeg not found."
+if "CSANIM_IGNORE_FFMPEG" not in os.environ:
+    assert FFMPEG is not None and os.path.isfile(FFMPEG), "FFmpeg not found."
 
 
 class Video:
