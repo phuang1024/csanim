@@ -43,7 +43,7 @@ make install
 # install the module first.
 
 # Build docs with sphinx
-make doc
+make docs
 
 # Open in a browser
 firefox ./docs/_build/html/index.html

@@ -20,12 +20,14 @@
 PY = /usr/bin/python3
 WHEEL_FLAGS = bdist_wheel sdist
 
+.PHONY: cpp docs install wheel upload
+
 
 cpp:
 	cd ./src; \
 	make;
 
-doc:
+docs:
 	cd ./docs; \
 	make html;
 
