@@ -32,7 +32,6 @@ lib.linear.restype = ctypes.c_double
 lib.sine.argtypes = [DOUB for _ in range(5)]
 lib.sine.restype = ctypes.c_double
 
-@staticmethod
 def constant(f1, f2, v1, v2, frame):
     """
     Constant interpolation.
@@ -40,14 +39,12 @@ def constant(f1, f2, v1, v2, frame):
     """
     return v1
 
-@staticmethod
 def linear(f1, f2, v1, v2, frame):
     """
     Linear interpolation.
     """
     return lib.linear(f1, f2, v1, v2, frame)
 
-@staticmethod
 def sine(f1, f2, v1, v2, frame):
     """
     Sine interpolation.
