@@ -104,6 +104,7 @@ if check_libs():
     from .lib import draw
     from . import props
     from .scene import *
+    from .utils import empty, getres
     from .video import Video
 else:
     verbose("csanim: module empty because libraries missing")

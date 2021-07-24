@@ -26,6 +26,8 @@ import os
 import shutil
 import time
 import ctypes
+import numpy as np
+from typing import Tuple
 
 PARENT = os.path.dirname(os.path.realpath(__file__))
 FONTS = os.path.join(PARENT, "fonts")
@@ -34,6 +36,25 @@ ROBOTO = os.path.join(FONTS, "roboto_mono.ttf")
 AR_FLAGS = "aligned, c_contiguous"
 UINT = ctypes.c_uint32
 DOUB = ctypes.c_double
+
+
+def empty(resolution: Tuple[int, int], dtype=np.uint8) -> np.ndarray:
+    """
+    Generates empty numpy array with the given dimensions.
+    Reverses given resolution because cv2 uses (height, width) shape.
+
+    :param resolution: (W, H) resolution.
+    :param dtype: Data type for np array.
+    """
+    return np.zeros((*resolution[::-1], 3), dtype=np.uint8)
+
+def getres(img: np.ndarray) -> Tuple[int, int]:
+    """
+    Gets (W, H) resolution from an image.
+
+    :param img: The image.
+    """
+    return img.shape[:2][::-1]
 
 
 class ProgressLogger:

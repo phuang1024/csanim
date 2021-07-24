@@ -28,17 +28,27 @@ __all__ = (
     "Rect",
 )
 
+# Type hinting
+class Scene:
+    pass
+
 import numpy as np
-from typing import Tuple
+from typing import Tuple, TYPE_CHECKING
 from .props import *
 from .lib import draw
+from .utils import getres
+if TYPE_CHECKING:
+    from .scene import Scene
 
 
 class Element:
     """
     Base element class. All other elements inherit from this.
 
-    There will be a ``show`` BoolProp.
+    Magic numbers for animating your inherited element should be
+    implemented as a static attribute of the class.
+
+    The base element will create a ``show`` BoolProp.
     When set to False in a frame, the element will not be rendered.
 
     Inherit and define:
@@ -70,7 +80,7 @@ class Element:
         """
         return True
 
-    def render(self, img: np.ndarray, frame: float) -> None:
+    def render(self, img: np.ndarray, frame: float, fps: float) -> None:
         """
         Elements may define their own implementation.
         Modify the input array in place.
@@ -79,7 +89,42 @@ class Element:
 
         :param img: Numpy array image.
         :param frame: Frame.
+        :param fps: Frames per second.
         """
+
+
+class Subscene(Element):
+    """
+    Apply a scene inside of a scene.
+    This element allows you to paste a scene inside of another scene.
+    You can control the position and scale.
+
+    Animatable attributes:
+
+    * ``loc``: (X, Y) pixel location.
+    * ``size``: (W, H) pixel size.
+    * ``method``: Crop/fit method to use. TODO Decide how to do this.
+    """
+    loc: VectorProp
+    size: VectorProp
+    method: IntProp
+
+    def __init__(self, scene: Scene, loc: Tuple[float, float], size: Tuple[float, float], method: int) -> None:
+        """
+        Initializes the Subscene.
+
+        :param scene: The sub scene.
+        :param loc: Default location.
+        :param size: Default size.
+        :param method: Default fit method.
+        """
+        self._scene = scene
+        self.loc = VectorProp(FloatProp, 2, loc)
+        self.size = VectorProp(FloatProp, 2, size)
+        self.method = IntProp(method)
+
+    def render(self, img: np.ndarray, frame: float, fps: float) -> None:
+        pass
 
 
 class Fill(Element):
@@ -101,7 +146,7 @@ class Fill(Element):
         color = self.color.value(frame)
         return color[3] != 0
 
-    def render(self, img: np.ndarray, frame: float) -> None:
+    def render(self, img: np.ndarray, frame: float, fps: float) -> None:
         color = self.color.value(frame)
         alpha = color[-1] / 255
 
@@ -139,7 +184,7 @@ class Circle(Element):
         color = self.color.value(frame)
         return color[3] != 0
 
-    def render(self, img: np.ndarray, frame: float) -> None:
+    def render(self, img: np.ndarray, frame: float, fps: float) -> None:
         color = self.color.value(frame)
         center = self.center.value(frame)
         radius = self.radius.value(frame)
@@ -178,7 +223,7 @@ class Rect(Element):
         color = self.color.value(frame)
         return color[3] != 0
 
-    def render(self, img: np.ndarray, frame: float) -> None:
+    def render(self, img: np.ndarray, frame: float, fps: float) -> None:
         color = self.color.value(frame)
         loc = self.loc.value(frame)
         size = self.size.value(frame)
