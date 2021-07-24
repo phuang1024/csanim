@@ -28,6 +28,7 @@ __all__ = [
     "SceneCode",
 
     "empty",
+    "getres",
 ]
 
 import numpy as np
@@ -39,12 +40,23 @@ from .props import *
 from .transition import transition
 
 
-def empty(resolution: Tuple[int, int]) -> np.ndarray:
+def empty(resolution: Tuple[int, int], dtype=np.uint8) -> np.ndarray:
     """
     Generates empty numpy array with the given dimensions.
-    Reverse resolution because cv2 uses (height, width) shape.
+    Reverses given resolution because cv2 uses (height, width) shape.
+
+    :param resolution: (W, H) resolution.
+    :param dtype: Data type for np array.
     """
     return np.zeros((*resolution[::-1], 3), dtype=np.uint8)
+
+def getres(img: np.ndarray) -> Tuple[int, int]:
+    """
+    Gets (W, H) resolution from an image.
+
+    :param img: The image.
+    """
+    return img.shape[:2][::-1]
 
 
 class Scene:
