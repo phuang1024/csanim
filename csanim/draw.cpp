@@ -151,13 +151,12 @@ extern "C" void line(UCH* img, const UINT width, const UINT height, CD x1, CD y1
     :param thick: Line thickness.
     :param r, g, b, a: R, G, B, A values.
     */
-    // TODO the line still appears bumpy
     const int xmin = max((int)(min(x1, x2)-thick-1), 0);
     const int xmax = min((int)(max(x1, x2)+thick+1), (int)width-1);
     const int ymin = max((int)(min(y1, y2)-thick-1), 0);
     const int ymax = min((int)(max(y1, y2)+thick+1), (int)height-1);
 
-    CD dx = abs(x1-x2), dy = abs(y1-y2);
+    CD dx = fabs(x1-x2), dy = fabs(y1-y2);
     CD m = (dy == 0) ? 1e9 : dx/dy;
     CD y_int = y1 - m*x1;
     CD A = -m, B = 1, C = -y_int;
@@ -167,7 +166,7 @@ extern "C" void line(UCH* img, const UINT width, const UINT height, CD x1, CD y1
 
     for (int x = xmin; x <= xmax; x++) {
         for (int y = ymin; y <= ymax; y++) {
-            CD dist = abs(A*x + B*y + C) / pythag(A, B);
+            CD dist = fabs(A*x + B*y + C) / pythag(A, B);
             CD fac = dbounds(thick-dist+1);
 
             UCH c2[3], color[3];
