@@ -23,6 +23,8 @@ Takes in a numpy array as an image with shape (height, width, 3)
 img variables are raveled numpy arrays.
 */
 
+#define  PI  3.14159265
+
 #include <iostream>
 #include <cmath>
 
@@ -104,6 +106,13 @@ void mix(UCH* dest, const UCH* c1, const UCH* c2, CD fac) {
     */
     for (int i = 0; i < 3; i++)
         dest[i] = c1[i]*(1-fac) + c2[i]*fac;
+}
+
+double radians(CD deg) {
+    /*
+    Convert degrees to radians.
+    */
+    return deg/180*2*PI;
 }
 
 double pythag(CD dx, CD dy) {
@@ -297,4 +306,38 @@ extern "C" void rect(UCH* img, const UINT width, const UINT height, CD dx, CD dy
             setc(img, width, x, y, color[0], color[1], color[2]);
         }
     }
+}
+
+extern "C" void arrow(UCH* img, const UINT width, const UINT height, CD x1, CD y1, CD x2, CD y2,
+        CD angle, CD side_len_fac, CD thick, CD r, CD g, CD b, CD a) {
+    /*
+    Draws an arrow.
+
+    :param img: Image.
+    :param width: Width.
+    :param height: Height.
+    :param x1, y1: Tail point.
+    :param x2, y2: Head point. This is where the three lines meet.
+    :param angle: Angle (degrees) between tail and side lines.
+    :param side_len_fac: Length factor of side lines.
+    :param thick: Line thickness.
+    */
+    CD dx = (x1-x2), dy = (y1-y2);
+
+    CD rad_angle = radians(angle);
+    CD main_angle = atan(dy/dx);
+    CD slope1 = tan((PI-main_angle)+rad_angle);
+    CD slope2 = tan((PI-main_angle)-rad_angle);
+
+    // Calculate side endpoints. s1y = side 1 Y
+    std::cout << main_angle;
+    std::cout << slope1 << " " << slope2 << std::endl;
+    CD side_len = side_len_fac * pythag(dx, dy);
+    CD s1x = side_len*cos(slope1)+x2, s1y = side_len*sin(slope1)+y2;
+    CD s2x = side_len*cos(slope2)+x2, s2y = side_len*sin(slope2)+y2;
+    std::cout << s1x << ' ' << s1y << " " << s2x << " " << s2y << std::endl;
+
+    line(img, width, height, x1, y1, x2, y2, thick, r, g, b, a);
+    line(img, width, height, x2, y2, s1x, s1y, thick, r, g, b, a);
+    line(img, width, height, x2, y2, s2x, s2y, thick, r, g, b, a);
 }

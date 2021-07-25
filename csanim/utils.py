@@ -27,6 +27,7 @@ import shutil
 import time
 import ctypes
 import numpy as np
+from numpy import ctypeslib
 from typing import Tuple
 
 PARENT = os.path.dirname(os.path.realpath(__file__))
@@ -34,6 +35,7 @@ FONTS = os.path.join(PARENT, "fonts")
 ROBOTO = os.path.join(FONTS, "roboto_mono.ttf")
 
 AR_FLAGS = "aligned, c_contiguous"
+AR3D = ctypeslib.ndpointer(dtype=np.uint8, ndim=3, flags=AR_FLAGS)
 UINT = ctypes.c_uint32
 DOUB = ctypes.c_double
 

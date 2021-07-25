@@ -31,18 +31,14 @@ from ..constants import *
 from ..utils import *
 
 lib = ctypes.CDLL(os.path.join(PARENT, "libdraw.so"))
-lib.line.argtypes = [
-    ctl.ndpointer(dtype=np.uint8, ndim=3, flags=AR_FLAGS),
-    UINT, UINT, *[DOUB for _ in range(9)]
-]
-lib.circle.argtypes = [
-    ctl.ndpointer(dtype=np.uint8, ndim=3, flags=AR_FLAGS),
-    UINT, UINT, *[DOUB for _ in range(8)]
-]
-lib.rect.argtypes = [
-    ctl.ndpointer(dtype=np.uint8, ndim=3, flags=AR_FLAGS),
-    UINT, UINT, *[DOUB for _ in range(14)]
-]
+lib.line.argtypes = [AR3D, UINT, UINT, *[DOUB for _ in range(9)]]
+lib.circle.argtypes = [AR3D, UINT, UINT, *[DOUB for _ in range(8)]]
+lib.rect.argtypes = [AR3D, UINT, UINT, *[DOUB for _ in range(14)]]
+lib.arrow.argtypes = [AR3D, UINT, UINT, *[DOUB for _ in range(11)]]
+
+
+def rgba(color):
+    return (*color, 255) if len(color) == 3 else color
 
 
 def line(img: np.ndarray, color: Tuple[float, ...], p1: Tuple[float, float], p2: Tuple[float, float],
@@ -57,7 +53,7 @@ def line(img: np.ndarray, color: Tuple[float, ...], p1: Tuple[float, float], p2:
     :param thickness: Line thickness.
     """
     assert img.dtype == np.uint8
-    color = (*color, 255) if len(color) == 3 else color
+    color = rgba(color)
     lib.line(img, img.shape[1], img.shape[0], *p1, *p2, thickness, *color)
 
 
@@ -73,7 +69,7 @@ def circle(img: np.ndarray, color: Tuple[float, ...], center: Tuple[float, float
     :param border: Border thickness. Set to 0 for no border.
     """
     assert img.dtype == np.uint8
-    color = (*color, 255) if len(color) == 3 else color
+    color = rgba(color)
     lib.circle(img, img.shape[1], img.shape[0], *center, radius, border, *color)
 
 
@@ -94,8 +90,26 @@ def rect(img: np.ndarray, color: Tuple[float, ...], dims: Tuple[float, float, fl
     :param br_rad: Bottom right corner radius.
     """
     assert img.dtype == np.uint8
-    color = (*color, 255) if len(color) == 3 else color
+    color = rgba(color)
     lib.rect(img, img.shape[1], img.shape[0], *dims, border, border_radius, tl_rad, tr_rad, bl_rad, br_rad, *color)
+
+
+def arrow(img: np.ndarray, color: Tuple[float, ...], tail: Tuple[float, float], head: Tuple[float, float],
+        angle: float = 40, side_len_fac: float = 0.4, thickness: float = 1):
+    """
+    Draws an arrow.
+
+    :param img: Image.
+    :param color: RGB or RGBA color.
+    :param tail: (X, Y) location of the arrow's tail.
+    :param head: (X, Y) location of head (where the three lines meet).
+    :param angle: Angle between main line and side lines (degrees).
+    :param side_len_fac: Length factor of side lines.
+    :param thickness: Thickness.
+    """
+    assert img.dtype == np.uint8
+    color = rgba(color)
+    lib.arrow(img, img.shape[1], img.shape[0], *tail, *head, angle, side_len_fac, thickness, *color)
 
 
 def text(img: np.ndarray, color: Tuple[float, ...], loc: Tuple[float, float], text: str,
