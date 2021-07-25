@@ -39,9 +39,9 @@ jobs:
           pip install -r requirements.txt
       - name: Build docs
         env:
-          CSANIM_QUIET: "y"
           CSANIM_COMPILE: "y"
           CSANIM_IGNORE_FFMPEG: "y"
+          CSANIM_QUIET: "y"
         run: |
           cd ./docs
           mkdir ./_static ./_templates

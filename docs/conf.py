@@ -18,6 +18,7 @@ import os
 from subprocess import Popen, DEVNULL
 
 os.environ["CSANIM_COMPILE"] = "y"
+os.environ["CSANIM_IGNORE_FFMPEG"] = "y"
 os.environ["CSANIM_QUIET"] = "y"
 # try:
 #     import csanim
